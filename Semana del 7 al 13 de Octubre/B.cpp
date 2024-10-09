@@ -1,3 +1,4 @@
+//https://codeforces.com/contest/547/problem/B
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define REV(x) x.rbegin(),x.rend()
@@ -12,10 +13,12 @@ int findx(int a){
     if(dad[a]==a){
         return a;
     }
-    return dad[a]=findx(a);
+    return dad[a]=findx(dad[a]);
 }
 void unionx(int a,int b){
-    if(findx(a)==findx(b)){
+    a=findx(a);
+    b=findx(b);
+    if(a==b){
         return;
     }
     if(tam[a]<tam[b]){
@@ -29,12 +32,13 @@ void unionx(int a,int b){
 int main(){
     scanf("%d",&n);
     vpii nums(n);
-    tam.assign(n,1);
+    tam.resize(n);
     dad.resize(n);
     for(int i=0;i<n;i++){
         scanf("%d",&nums[i].first);
         nums[i].second=i;
         dad[i]=i;
+        tam[i]=1;
     }
     sort(REV(nums));
     int con=1;
