@@ -25,9 +25,21 @@ int main(){
     n*=2;
     map<int,int> cant;
     vi res;
+    vi nums(n);
     for(int i=0;i<n;i++){
         scanf("%d",&a);
         cant[a]++;
+        nums[i]=a;
+    }
+    sort(nums.rbegin(),nums.rend());
+    for(int i=0;i<n;i++){
+        if(criba[nums[i]]==nums[i]){
+            auto p=lower_bound(primes.begin(),primes.end(),nums[i]);
+            int x=p-primes.begin();
+            cout << nums[i] << "primo" << x << endl;
+        }else{
+            cout << nums[i] << "compu" << criba[nums[i]] << endl;;
+        }
     }
     auto u=cant.rbegin();
     for(;u!=cant.rend();u++){
@@ -48,7 +60,10 @@ int main(){
         }
     }
     n/=2;
-    for(int i=0;i<n;i++){
+    /*for(int i=0;i<n;i++){
         printf("%d ",res[i]);
-    }
+    }*/
 }
+//1983 305 566 1044 2088 283 645 943 1645 329 215 299 525 1050 661 23 610 41
+
+//1999 2088 1983 1645 1050 1044 943 645 610 566 
