@@ -8,3 +8,8 @@
 *.zip
 *.rar
 *.doc
+*.prob
+*.h
+grader.*
+*.pas
+*.c
