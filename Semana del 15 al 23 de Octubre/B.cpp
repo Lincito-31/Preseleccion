@@ -5,54 +5,51 @@
 using namespace __gnu_pbds;
 using namespace std;
 typedef pair<int,int> pii;
+typedef long long ll;
 typedef tree<pii,null_type,less<pii>,rb_tree_tag,tree_order_statistics_node_update> indexed_set;
 typedef vector<int> vi;
-int n,a,t;
-indexed_set hora;
+typedef vector<ll> vll;
+ll n,a,t;
 int main(){
-    scanf("%d",&n);
-    vector<vi> nums(n,vi(3));
-    vi res(n);
-    for(int i=0;i<n;i++){
-        scanf("%d %d",&a,&t);
+    scanf("%lld",&n);
+    vector<vll> nums(n,vll(3));
+    vll res(n);
+    for(ll i=0;i<n;i++){
+        scanf("%lld %lld",&a,&t);
         t+=a;
         nums[i]={a,t,i};
     }
     sort(ALL(nums));
-    for(int i=1;i<n;i++){
+    for(ll i=1;i<n;i++){
         if(nums[i][0]==nums[i-1][0]){  
-            int temp=nums[i][1];
-            int temp2=nums[i][2];
+            ll temp=nums[i][1];
+            ll temp2=nums[i][2];
             nums[i][1]=nums[i-1][1];
             nums[i][2]=nums[i-1][2];
             nums[i-1][1]=temp;
             nums[i-1][2]=temp2;
         }
     }
-    for(int i=n-1;i>=0;i--){
-        //hora.insert(nums[i][1]);
-        int x=hora.order_of_key({nums[i][1]-1,nums[i][2]});
-        if(x==i){
-            res[nums[i][2]]=0;
-        }else{
-            res[nums[i][2]]=res[hora.find_by_order(x)->second]+1;
+    vector<vector<pair<ll,ll>>> cant(n,vector<pair<ll,ll>>(1,{0,-1}));
+    cant[0].push_back({nums[0][1],nums[0][2]});
+    for(ll i=1;i<n;i++){
+        ll limi=0,limd=n-1;
+        while(limi!=limd){
+            ll mid=(limi+limd)/2;
+            if(nums[i][1]<=cant[mid].back().first){
+                limi=mid+1;
+            }else{
+                limd=mid;
+            }
         }
-        hora.insert({nums[i][1],nums[i][2]});
+        cant[limi].push_back({nums[i][1],nums[i][2]});
     }
-    for(int i=0;i<n;i++){
-        printf("%d ",res[i]);
+    for(ll i=0;i<n;i++){
+        for(ll j=1;j<cant[i].size();j++){
+            res[cant[i][j].second]=i;
+        }
+    }
+    for(ll i=0;i<n;i++){
+        printf("%lld ",res[i]);
     }
 }
-/*
-4
-1 8 2
-2 10 1
-4 9 3
-5 7 4
-
-2 6 1
-2 4 3
-3 6 2
-4 6 4
-4 5 5
-*/

@@ -9,57 +9,14 @@ typedef tree<pii,null_type,less<pii>,rb_tree_tag,tree_order_statistics_node_upda
 typedef vector<int> vi;
 typedef long long ll;
 ll t,n,x,y;
-string a,b;
-vector<ll> err;
-vector<vector<ll>> mat;
-/*ll dp(ll a,ll b){
-    if(mat[a][b]!=0){
-        return mat[a][b];
-    }
-    if(b==a+1){
-        mat[a][b]=min((err[b]-err[a])*x,y);
-        return mat[a][b];
-        //caso base
-    }
-    if((err[a+1]-err[a])*x>=y){
-        mat[a][b]=y+dp(a+1,b-1);
-        return mat[a][b];
-    }
-    if((err[b]-err[a])*x<=y){
-        mat[a][b]=(err[a+1]-err[a])*x+dp(a+2,b);
-        return mat[a][b];
-    }
-    ll op1=min((err[a+1]-err[a])*x,y)+dp(a+2,b);
-    ll op2=min((err[b]-err[a])*x,y)+dp(a+1,b-1);
-    mat[a][b]=min(op1,op2);
-    return mat[a][b];
-}*/
-// caso tricky 1,4,7,[16,17],19
-/*
-1,7,21,100, 10000,100001
-*/
-ll dp(ll a,ll b){
-    if(a>b){
-        return 0;
-    }
-    if(mat[a][b]!=1e18){
-        return mat[a][b];
-    }
-    for(int i=a+1;i<=b;i+=2){
-        mat[a][b]=min(mat[a][b],min((err[i]-err[a])*x,y)+dp(a+1,i-1)+dp(i+1,b));
-    }
-    return mat[a][b];
-}
 int main(){
-    ios_base::sync_with_stdio(0);
-    cin.tie(0);cout.tie(0);
-    cin >> t;
+    scanf("%lld",&t);
     while(t--){
-        cin >> n >> x >> y;
-        cin >> a >> b;
+        scanf("%lld %lld %lld",&n,&x,&y);
+        char a[n+5],b[n+5];
+        scanf("%s %s",a,b);
         ll res=0;
-        err.clear();
-        mat.clear();
+        vector<ll> err;
         for(int i=0;i<n;i++){
             if(a[i]!=b[i]){
                 err.push_back(i);
@@ -67,20 +24,36 @@ int main(){
         }
         n=err.size();
         if(n%2==1){
-            cout << "-1\n";
+            printf("-1\n");
         }else{
             if(n!=0){
-                if(y<x){
+                if(y<=x){
                     res=(n/2)*y;
                     if(n==2 && err[1]==err[0]+1){
                         res=min(2*y,x);
                     }
                 }else{
-                    mat.assign(n,vector<ll>(n,1e18));
-                    res=dp(0,n-1);
+                    vector<vector<ll>> dp(5002,vector<ll>(5002,1e18));
+                    dp[n][0]=0;
+                    dp[n-1][1]=0;
+                    for(ll i=n-2;i>=0;i--){
+                        dp[i][0]=min(dp[i+2][0]+(err[i+1]-err[i])*x,dp[i+1][1]+y);
+                        for(ll j=1;j<5002;j++){
+                            dp[i][j]=min(dp[i+2][j]+(err[i+1]-err[i])*x,min(dp[i+1][j + 1]+y,dp[i+1][j-1]));
+                        }
+                    }
+                    res=dp[n-1][0];
                 }
             }
-            cout << res << "\n";
+            printf("%lld\n",res);
         }
     }
 }
+/*
+La primera transición representa el caso en el que tomamos el par y lo conseguimos usando puros x, 
+la segunda transición representa el caso en el que nosotros emparejamos la posición en la que 
+estamos con otra que no necesariamente es la siguiente y la última transición representa el caso en 
+el que hay algunos que aun no se emparejaron y lo emparejamos con el actual. Los casos base 
+representan que hay solo uno más por emparejar y estamos en la última posición errada y el otro 
+representa que ya no hay más posiciones erradas que emperejar.
+*/
