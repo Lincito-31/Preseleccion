@@ -1,3 +1,4 @@
+//https://oj.uz/problem/view/IOI10_traffic
 #include "traffic.h"
 #include <bits/stdc++.h>
 using namespace std;
