@@ -69,8 +69,8 @@ int CountCritical(){
   if(t4==1){
     // si quito inde_t4 es un chain?
 
-  }else if(t3){
-
+  }else if(t3>=1){
+    // si quito el inde_3 o sus vecinos sera un chain?
   }
   return N;
 }
