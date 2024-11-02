@@ -21,6 +21,8 @@
         "iostream": "cpp",
         "chrono": "cpp",
         "random": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "iosfwd": "cpp",
+        "*.tcc": "cpp"
     }
 }
