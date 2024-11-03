@@ -61,59 +61,78 @@ map<int,int> query(int iz,int de,int now,int l,int r){
     return res;
 }
 int checkear(map<int,int> prueb){
-    int res=0;
+    int res=-1;
+    int nue=-1;
     auto p=prueb.end();
     p--;
-    int penu=-1,antepenu=-1,last=p->first;
+    int last=p->first,penu=-1,antepenu=-1;
     if(p->second>=3){
-        penu=last;
-        antepenu=last;
-    }else if(p->second==2){
-        penu=last;
-        if(p!=prueb.begin()){
-            p--;
-            antepenu=p->first;
-        }
-    }else if(p!=prueb.begin()){
+        nue=3*p->first;
+    }
+    if(p->second==2 && p!=prueb.begin()){
+        auto q=p;
+        q--;
+        nue=2*p->first+q->first;
+    }
+    if(p!=prueb.begin()){
         p--;
         penu=p->first;
-        if(p->second>=2){
-            antepenu=penu;
-        }else{
-            if(p!=prueb.begin()){
-                p--;
-                antepenu=p->first;
-            }
-        }
     }
-    if(antepenu==-1){
-        return 0;
+    if(p->second>=3){
+        nue=max(nue,3*p->first);
+    }
+    if(p->second==2 && p!=prueb.begin()){
+        auto q=p;
+        q--;
+        nue=max(nue,2*p->first+q->first);
+    }
+    if(p!=prueb.begin()){
+        p--;
+        antepenu=p->first;
+    }
+    if(p->second>=3){
+        nue=max(nue,3*p->first);
+    }
+    if(p->second==2 && p!=prueb.begin()){
+        auto q=p;
+        q--;
+        nue=max(nue,2*p->first+q->first);
     }
     if(antepenu+penu>last){
-        return antepenu+penu+last;
+        res=antepenu+penu+last;
     }
-    while(p!=prueb.begin()){
-        if(antepenu+penu>last){
-            return antepenu+penu+last;
-        }
-        last=penu;
-        penu=antepenu;
-        if(p->second>=2){
-            if(penu+antepenu>last){
-                return antepenu+penu+last;
-            }
-        }
-        if(p->second>=3){
-            return 3*antepenu;
-        }else{
+    res=max(res,nue);
+    if(res==-1){
+        while(p!=prueb.begin()){
             p--;
-            penu=p->first;
-            if(penu+antepenu>last){
-                return antepenu+penu+last;
+            last=penu;
+            penu=antepenu;
+            antepenu=p->first;
+            if(p->second>=2){
+                auto q=p;
+                q++;
+                if(2*p->first>q->first){
+                    nue=2*p->first+q->first;
+                }
+            }
+            if(p->second>=3){
+                nue=3*p->first;
+            }
+            if(p->second==2 && p!=prueb.begin()){
+                auto q=p;
+                q--;
+                nue=2*p->first+q->first;
+            }
+            if(antepenu+penu>last){
+                res=antepenu+penu+last;
+            }
+            res=max(res,nue);
+            if(res!=-1){
+                break;
             }
         }
     }
-    return 0;
+    return res==-1?0:res;
 }
 int main(){
     scanf("%d%d",&n,&q);
@@ -127,8 +146,83 @@ int main(){
         scanf("%d%d%d",&t,&a,&b);
         if(t){
             //query
+            bool xdd=false;
             map<int,int> prueb=query(a,b,0,0,n-1);
-            printf("%d\n",checkear(prueb));
+            int res=-1;
+            int nue=-1;
+            auto p=prueb.end();
+            p--;
+            int last=p->first,penu=-1,antepenu=-1;
+            if(p->second>=3){
+                nue=3*p->first;
+            }
+            if(p->second==2 && p!=prueb.begin()){
+                auto q=p;
+                q--;
+                nue=2*p->first+q->first;
+            }
+            if(p!=prueb.begin()){
+                p--;
+                penu=p->first;
+            }
+            if(p->second>=3){
+                nue=max(nue,3*p->first);
+            }
+            if(p->second==2 && p!=prueb.begin()){
+                auto q=p;
+                q--;
+                nue=max(nue,2*p->first+q->first);
+            }
+            if(p!=prueb.begin()){
+                p--;
+                antepenu=p->first;
+            }
+            if(p->second>=3){
+                nue=max(nue,3*p->first);
+            }
+            if(p->second==2 && p!=prueb.begin()){
+                auto q=p;
+                q--;
+                nue=max(nue,2*p->first+q->first);
+            }
+            if(antepenu+penu>last){
+                res=antepenu+penu+last;
+            }
+            res=max(res,nue);
+            if(res==-1){
+                while(p!=prueb.begin()){
+                    p--;
+                    last=penu;
+                    penu=antepenu;
+                    antepenu=p->first;
+                    if(p->second>=2){
+                        auto q=p;
+                        q++;
+                        if(2*p->first>q->first){
+                            nue=2*p->first+q->first;
+                        }
+                    }
+                    if(p->second>=3){
+                        nue=3*p->first;
+                    }
+                    if(p->second==2 && p!=prueb.begin()){
+                        auto q=p;
+                        q--;
+                        nue=2*p->first+q->first;
+                    }
+                    if(antepenu+penu>last){
+                        res=antepenu+penu+last;
+                    }
+                    res=max(res,nue);
+                    if(res!=-1){
+                        break;
+                    }
+                }
+            }
+            if(res==-1){
+                res=0;
+            }
+            printf("%d\n",res);
         }else{
             //update
             int x=nums[a];
