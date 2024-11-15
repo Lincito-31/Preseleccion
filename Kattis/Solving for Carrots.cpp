@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
-vector<long long> fib(21);
+int n,p;
 int main(){
+    scanf("%d%d",&n,&p);
+    printf("%d",p);
 }

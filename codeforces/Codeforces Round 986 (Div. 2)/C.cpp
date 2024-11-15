@@ -15,64 +15,60 @@ int main(){
     while(t--){
         scanf("%lld%lld%lld",&n,&b,&c);
         vll cakes(n);
-        ll sumtot=0;
+        vll psum(n);
+        ll now=0;
+        vll iz;
+        vll de;
         for(int i=0;i<n;i++){
             scanf("%lld",&cakes[i]);
-            sumtot+=cakes[i];
+            psum[i]=psum[(i==0?1:i)-1]+cakes[i];
+            now+=cakes[i];
+            if(now>=c){
+                iz.push_back(i);
+                now=0;
+            }
         }
-        ll iz=-1,de=n,sumiz=0,sumde=0;
-        ll con=0;
-        ll nowiz=-1,nowde=n;
-        bool xd=true;
-        while(con<b){
-            nowiz=iz;
-            nowde=de;
-            while(sumiz<c){
-                iz++;
-                if(iz>=nowde){
-                    break;
-                }
-                sumiz+=cakes[iz];
+        now=0;
+        for(int i=n-1;i>=0;i--){
+            now+=cakes[i];
+            if(now>=c){
+                de.push_back(i);
+                now=0;
             }
-            while(sumde<c){
-                de--;
-                if(de<=nowiz){
-                    break;
-                }
-                sumde+=cakes[de];
-            }
-            if(sumiz>=c && sumde>=c){
-                if(sumiz<sumde){
-                    sumtot-=sumiz;
-                    sumiz=0;
-                }else{
-                    sumtot-=sumde;
-                    sumde=0;
-                }
-                if(iz>=de){
-                    con++;
-                    break;
-                }
-            }else if(sumiz>=c || sumde>=c){
-                if(sumiz>sumde){
-                    sumtot-=sumiz;
-                    sumiz=0;
-                }else{
-                    sumtot-=sumde;
-                    sumde=0;
-                }
-                con++;
-                break;
-            }else{
-                break;
-            }
-            con++;
         }
-        if(con==b){
-            printf("%lld",sumtot);
+        ll res=-1;
+        //solo iz:
+        if(iz.size()<b){
+            //nada
         }else{
-            printf("-1");
+            res=max(res,psum[n-1]-psum[iz[b-1]]);
         }
-        printf("\n");
+        //solo de:
+        if(de.size()<b){
+            //nada
+        }else{
+            if(de[b-1]-1<0){
+                res=max(res,(ll)0);
+            }else{
+                res=max(res,psum[(de[b-1]-1)]);
+            }
+        }
+        //combinacion de los dos:
+        ll piz=min(b-1,(ll)iz.size());
+        for(;piz>=1;piz--){
+            ll pde=b-piz;
+            if(pde>de.size()){
+                break;
+            }
+            if(pde==0){
+                continue;
+            }
+            if(iz[piz-1]<de[pde-1]){
+                res=max(res,psum[de[pde-1]-1]-psum[iz[piz-1]]);
+            }else{
+                continue;
+            }
+        }
+        printf("%lld\n",res);
     }
 }
