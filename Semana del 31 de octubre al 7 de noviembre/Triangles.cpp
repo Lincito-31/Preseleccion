@@ -9,7 +9,7 @@ vector<vi> st;
 // Que grande Mati
 void build(int pos,int l,int r){
     if(l==r){
-        st[pos].push_back(nums[l]);
+        st[pos][0]=nums[l];
     }else{
         int mid=(l+r)>>1;
         int hiji=(pos<<1)+1,hijd=(pos<<1)+2;
@@ -18,34 +18,35 @@ void build(int pos,int l,int r){
         int iz=0,de=0,con=1;
         while(iz<st[hiji].size() && de<st[hijd].size() && con<=44){
             if(st[hiji][iz]>=st[hijd][de]){
-                st[pos].push_back(st[hiji][iz]);
+                st[pos][con-1]=st[hiji][iz];
                 iz++;
             }else{
-                st[pos].push_back(st[hijd][de]);
+                st[pos][con-1]=st[hijd][de];
                 de++;
             }
             con++;
         }
         while(iz<st[hiji].size() && con<=44){
-            st[pos].push_back(st[hiji][iz]);
+            st[pos][con-1]=st[hiji][iz];
             iz++;
             con++;
         }
         while(de<st[hijd].size() && con<=44){
-            st[pos].push_back(st[hijd][de]);
+            st[pos][con-1]=st[hijd][de];
             de++;
             con++;
         }
     }
 }
 vi query(int pos,int i,int j,int l,int r){
-    vi res;
     if(r<i || j<l){
+        vi res;
         return res;
     }
     if(i<=l && r<=j){
         return st[pos];
     }
+    vi res(44,0);
     int mid=(l+r)>>1;
     int hiji=(pos<<1)+1,hijd=(pos<<1)+2;
     vi izqui=query(hiji,i,j,l,mid);
@@ -53,21 +54,21 @@ vi query(int pos,int i,int j,int l,int r){
     int iz=0,de=0,con=1;
     while(iz<izqui.size() && de<derec.size() && con<=44){
         if(izqui[iz]>=derec[de]){
-            res.push_back(izqui[iz]);
+            res[con-1]=izqui[iz];
             iz++;
         }else{
-            res.push_back(derec[de]);
+            res[con-1]=derec[de];
             de++;
         }
         con++;
     }
     while(iz<izqui.size() && con<=44){
-        res.push_back(izqui[iz]);
+        res[con-1]=izqui[iz];
         iz++;
         con++;
     }
     while(de<derec.size() && con<=44){
-        res.push_back(derec[de]);
+        res[con-1]=derec[de];
         de++;
         con++;
     }
@@ -75,33 +76,32 @@ vi query(int pos,int i,int j,int l,int r){
 }
 void update(int pos,int l,int r,int index,int val){
     if(l==r && l==index){
-        st[pos].pop_back();
-        st[pos].push_back(val);
+        st[pos][0]=val;
         return;
     }else if(l<=index && index<=r){
         int mid=(l+r)>>1;
         int hiji=(pos<<1)+1,hijd=(pos<<1)+2;
         update(hiji,l,mid,index,val);
         update(hijd,mid+1,r,index,val);
-        st[pos].clear();
+        //st[pos].clear();
         int iz=0,de=0,con=1;
         while(iz<st[hiji].size() && de<st[hijd].size() && con<=44){
             if(st[hiji][iz]>=st[hijd][de]){
-                st[pos].push_back(st[hiji][iz]);
+                st[pos][con-1]=st[hiji][iz];
                 iz++;
             }else{
-                st[pos].push_back(st[hijd][de]);
+                st[pos][con-1]=st[hijd][de];
                 de++;
             }
             con++;
         }
         while(iz<st[hiji].size() && con<=44){
-            st[pos].push_back(st[hiji][iz]);
+            st[pos][con-1]=st[hiji][iz];
             iz++;
             con++;
         }
         while(de<st[hijd].size() && con<=44){
-            st[pos].push_back(st[hijd][de]);
+            st[pos][con-1]=st[hijd][de];
             de++;
             con++;
         }
@@ -110,7 +110,7 @@ void update(int pos,int l,int r,int index,int val){
 int main(){
     scanf("%d%d",&n,&q);
     nums.resize(n);
-    st.resize(4*n+5);
+    st.assign(4*n+5,vi(44,0));
     for(int i=0;i<n;i++){
         scanf("%d",&nums[i]);
     }
