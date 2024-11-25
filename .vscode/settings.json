@@ -28,6 +28,9 @@
         "latch": "cpp",
         "semaphore": "cpp",
         "tuple": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "cmath": "cpp",
+        "ostream": "cpp",
+        "complex": "cpp"
     }
 }
