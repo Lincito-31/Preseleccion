@@ -7,64 +7,43 @@ typedef vector<long long> vll;
 ll n,m,a,b,c;
 vector<pll> graph[100005];
 vector<bool> visited(100005,false);
-vector<vll> dp(100005,vll(4,0));
-vll count(ll now,ll ante){
-    if(now==n){
-        dp[now][0]=0;
-        dp[now][1]=1;
-        dp[now][2]=0;
-        dp[now][3]=0;
-        return dp[now];
-    }
-    if(!(dp[now][0]==0 && dp[now][1]==0)){
-        return dp[now];
-    }
-    visited[now]=true;
-    ll con=0;
-    ll mini=1e18,maxilon=0,minilon=1e18;
-    for(auto u:graph[now]){
-        if(visited[u.first]){
+vector<vll> valores(100005,vll(4,1e18));
+void count(){
+    ll x;
+    priority_queue<pair<ll,ll>> cola;
+    cola.push({0,1});
+    valores[1]={0,1,0,0};
+    while(!cola.empty()){
+        x=cola.top().second;
+        cola.pop();
+        if(visited[x]){
             continue;
         }
-        vll x=count(u.first,now);
-        if(mini<u.second+x[0]){
-            continue;
-        }else if(mini==u.second+x[0]){
-            con+=x[1];
-            maxilon=max(maxilon,1+x[3]);
-            minilon=min(minilon,1+x[2]);
-        }else{
-            mini=u.second+x[0];
-            con=x[1];
-            maxilon=1+x[3];
-            minilon=1+x[2];
+        visited[x]=true;
+        for(auto u:graph[x]){
+            ll y=u.first,w=u.second;
+            if(valores[x][0]+w<valores[y][0]){
+                valores[y][0]=valores[x][0]+w;
+                valores[y][1]=valores[x][1];
+                valores[y][1]%=MOD;
+                valores[y][2]=valores[x][2]+1;
+                valores[y][3]=valores[x][3]+1;
+                cola.push({-valores[y][0],y});
+            }else if(valores[x][0]+w==valores[y][0]){
+                valores[y][1]+=valores[x][1];
+                valores[y][1]%=MOD;
+                valores[y][2]=min(valores[y][2],valores[x][2]+1);
+                valores[y][3]=max(valores[y][3],valores[x][3]+1);
+            }
         }
     }
-    con%=1000000007;
-    dp[now][0]=mini;
-    dp[now][1]=con;
-    dp[now][2]=minilon;
-    dp[now][3]=maxilon;
-    visited[now]=false;
-    return dp[now];
 }
-
 int main(){
     scanf("%lld%lld",&n,&m);
-    map<ll,map<ll,ll>> guard;
     for(int i=0;i<m;i++){
         scanf("%lld%lld%lld",&a,&b,&c);
-        if(guard[a][b]==0){
-            guard[a][b]=c;
-        }else{
-            guard[a][b]=min(guard[a][b],c);
-        }
+        graph[a].push_back({b,c});
     }
-    for(auto u:guard){
-        for(auto j:u.second){
-            graph[u.first].push_back(j);
-        }
-    }
-    vll resp=count(1,0);
-    printf("%lld %lld %lld %lld",resp[0],resp[1],resp[2],resp[3]);
+    count();
+    printf("%lld %lld %lld %lld",valores[n][0],valores[n][1],valores[n][2],valores[n][3]);
 }
