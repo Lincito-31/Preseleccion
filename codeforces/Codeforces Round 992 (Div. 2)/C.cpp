@@ -13,17 +13,14 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> indexed_set;
 ll t=1,n,k;
-vll pot(1e5+5);
+vll pot(2e5+5);
 int main(){
     scanf("%lld",&t);
     pot[1]=1;
     for(int i=2;i<60;i++){
         pot[i]=pot[i-1]<<1;
-        if(pot[i]>1e14){
-            pot[i]>>1;
-        }
     }
-    for(int i=60;i<1e5+5;i++){
+    for(int i=60;i<2e5+5;i++){
         pot[i]=pot[i-1];
     }
     while(t--){
