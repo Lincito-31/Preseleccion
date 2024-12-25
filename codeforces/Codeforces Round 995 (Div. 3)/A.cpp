@@ -16,5 +16,19 @@ int main(){
     scanf("%d",&t);
     while(t--){
         scanf("%d",&n);
+        vi a(n),b(n);
+        for(int i=0;i<n;i++){
+            scanf("%d",&a[i]);
+        }
+        for(int i=0;i<n;i++){
+            scanf("%d",&b[i]);
+        }
+        int sum=a.back();
+        for(int i=0;i<n-1;i++){
+            if(a[i]>b[i+1]){
+                sum+=a[i]-b[i+1];
+            }
+        }
+        printf("%d\n",sum);
     }
 }

@@ -11,10 +11,26 @@ typedef vector<long long> vll;
 typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> indexed_set;
-int t=1,n;
+ll t=1,n,a,b,c;
 int main(){
-    scanf("%d",&t);
+    scanf("%lld",&t);
     while(t--){
-        scanf("%d",&n);
+        scanf("%lld%lld%lld%lld",&n,&a,&b,&c);
+        ll sum=a+b+c;
+        ll day=n/sum;
+        day*=3;
+        n%=sum;
+        if(n>0){
+            n-=a;
+            day++;
+            if(n>0){
+                day++;
+                n-=b;
+                if(n>0){
+                    day++;
+                }
+            }
+        }
+        printf("%d\n",day);
     }
 }
