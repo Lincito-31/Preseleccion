@@ -1,63 +1,39 @@
-#include <bits/stdc++.h>
-using namespace std;
-string x,y;
-int n;
-vector<vector<int>> psum;
-void init(string a,string b){
-	x=a;y=b;
-	n=a.size(); 
-	psum.assign(10,vector<int>(n+1));
-	for(int i=1;i<=n;i++){
-		psum[6][i]=psum[6][i-1]+(a[i-1]=='A');
-		psum[7][i]=psum[7][i-1]+(a[i-1]=='T');
-		psum[8][i]=psum[8][i-1]+(b[i-1]=='A');
-		psum[9][i]=psum[9][i-1]+(b[i-1]=='T');
-		psum[4][i]=psum[4][i-1],psum[5][i]=psum[5][i-1],psum[0][i]=psum[0][i-1],psum[1][i]=psum[1][i-1],psum[2][i]=psum[2][i-1],psum[3][i]=psum[3][i-1];
-		if(a[i-1]=='A'){
-			if(b[i-1]=='T')psum[1][i]++;
-			if(b[i-1]=='C')psum[4][i]++;
-		}else if(a[i-1]=='T'){
-			if(b[i-1]=='A')psum[0][i]++;
-			if(b[i-1]=='C')psum[2][i]++;
-		}else{
-			if(b[i-1]=='A')psum[5][i]++;
-			if(b[i-1]=='T')psum[3][i]++;
+void bitsort(vector<int>&a,int pos,int size){
+	//Our base case:
+	//When the size of this array is 1 or 0, then we don't have to sort it since it is already sorted.
+	//When the position=-1, then we don't have to sort it since theres no position -1.
+	if(size<2 || pos==-1){
+		return;
+	}
+	//x=size of array left and y=size of array right
+	int x=0,y=0;
+	vector<int> left,right;
+	for(int i=0;i<size;i++){
+		//Checking if the bit on position pos is 1 or 0
+		if(a[i]&(1<<pos)){
+			right.push_back(a[i]);
+			y++;
+			}else{
+			left.push_back(a[i]);
+			x++;
 		}
 	}
+	//sorting left and right independently
+	bitsort(left,pos-1,x);
+	bitsort(right,pos-1,y);
+	//Joining these two arrays
+	for(int i=0;i<x;i++){
+		a[i]=left[i];
+	}
+	for(int i=0;i<y;i++){
+		a[i+x]=right[i];
+	}
+	//So we have done
+	return;
 }
-int get_distance(int x, int y){
-	if((psum[6][y+1]-psum[6][x]==psum[8][y+1]-psum[8][x]) && (psum[7][y+1]-psum[7][x]==psum[9][y+1]-psum[9][x])){
-        int AC=psum[4][y+1]-psum[4][x],CA=psum[5][y+1]-psum[5][x],AT=psum[1][y+1]-psum[1][x],TA=psum[0][y+1]-psum[0][x],TC=psum[2][y+1]-psum[2][x],CT=psum[3][y+1]-psum[3][x];
-		int con1=min(AC,CA),con2=min(AT,TA),con3=min(TC,CT);
-		return con1+con2+con3+((AC+CA+TA+AT+CT+TC-2*con1-2*con2-2*con3)/3)*2;;
-    }else{
-        return -1;
-    }
-}
-
-
-
-int main() {
-	int n, q;
-	assert(scanf("%d %d", &n, &q) == 2);
-	char A[n+1], B[n+1];
-	assert(scanf("%s", A) == 1);
-	assert(scanf("%s", B) == 1);
-	std::string a = std::string(A);
-	std::string b = std::string(B);
-	std::vector<int> x(q), y(q);
-	for (int i = 0; i < q; i++) {
-		assert(scanf("%d %d", &x[i], &y[i]) == 2);
-	}
-	fclose(stdin);
-	std::vector<int> results(q);
-	init(a, b);
-	for (int i = 0; i < q; i++) {
-		results[i] = get_distance(x[i], y[i]);
-	}
-	for (int i = 0; i < q; i++) {
-		printf("%d\n", results[i]);
-	}
-	fclose(stdout);
-	return 0;
+vector<int> sortArray(vector<int>& nums) {
+	int n=nums.size();
+	//Calling the function
+	bitsort(nums,30,nums.size());
+	return nums;
 }
