@@ -3,36 +3,37 @@
 using namespace std;
 int q,k,a;
 char c;
-map<int,int> mapa;
+int res[5001];
 int main(){
-    mapa[0]=1;
     scanf("%d%d",&q,&k);
+    for(int i=0;i<=5000;i++){
+        res[i]=0;
+    }
+    res[0]=1;
     while(q--){
         scanf(" %c %d",&c,&a);
         if(c=='+'){
-            auto p=mapa.end();
-            while(p!=mapa.begin()){
-                p--;
-                if(p->second<=0){
+            for(int i=5000;i>=0;i--){
+                if(res[i]==0 || i+a>5000){
                     continue;
                 }
-                mapa[p->first+a]+=p->second;
+                res[i+a]+=res[i];
+                res[i+a]%=MOD;
             }
         }else{
-            auto p=mapa.end();
-            while(p!=mapa.begin()){
-                p--;
-                if(p->second<=0){
+            for(int i=0;i<=5000;i++){
+                if(res[i]==0){
                     continue;
                 }
-                if(p->first-a>=0){
-                    p->second-=mapa[p->first-a];
-                    /*if(p->second==0 && p->first!=k){
-                        mapa.erase(p->first);
-                    }*/
+                if(i-a<0){
+                    continue;
                 }
+                res[i]-=res[i-a];
+                res[i]%=MOD;
+                res[i]+=MOD;
+                res[i]%=MOD;
             }
         }
-        printf("%d\n",mapa[k]);
+        printf("%d\n",res[k]);
     }
 }
