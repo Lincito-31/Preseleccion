@@ -1,16 +1,24 @@
-#include <iostream>
-#include <map>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
-map<int,int> list;
-int a;
-vector<int> arr;
-int main()
-{ while(!cin.eof())
-  { cin >> a;
-    if(!list.count(a)) {arr.push_back(a); list[a] = 1;}
-    else list[a]++;
+typedef long long ll;
+ll n;
+ll main(){
+  scanf("%lld",&n);
+  vector<ll> nums(n),psum(n),ssum(n);
+  for(ll i=0;i<n;i++){
+    scanf("%d",&nums[i]);
   }
-  for(int i = 0; i < arr.size(); i++) 
-  { cout << arr[i] << ' ' << list[arr[i]] << '\n';}
+  psum[0]=0;
+  ssum[n-1]=0;
+  for(ll i=1;i<n;i++){
+    psum[i]=max(psum[i-1]+nums[i-1]+1-nums[i],psum[i-1]);
+  }
+  for(ll i=n-2;i>=0;i--){
+    ssum[i]=max(ssum[i+1]+nums[i+1]+1-nums[i],ssum[i+1]);
+  }
+  ll res=1e18;
+  for(ll i=0;i<n;i++){
+    res=min(res,max(psum[i],ssum[i]));
+  }
+  printf("%lld",res);
 }
