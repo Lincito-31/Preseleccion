@@ -1,27 +1,43 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-using namespace __gnu_pbds;
 using namespace std;
-typedef pair<int,int> pii;
-typedef tree<pii,null_type,less<pii>,rb_tree_tag,tree_order_statistics_node_update> piiset;
-int t,n,m,a;
+int t,n,m,a,b,res=1;
+int dju[30005],tam[30005];
+bool xd=false;
+int q(int x){
+    return x*x;
+}
+int find(int x){
+    if(x==dju[x]){
+        return x;
+    }
+    return dju[x]=find(dju[x]);
+}
+void unite(int x,int y){
+    x=find(x);
+    y=find(y);
+    if(x==y){
+        return;
+    }
+    if(tam[x]>tam[y]){
+        swap(x,y);
+    }
+    tam[y]+=tam[x];
+    dju[x]=y;
+    res=max(res,tam[y]);
+}
 int main(){
     scanf("%d",&t);
     while(t--){
+        res=1;
         scanf("%d%d",&n,&m);
-        piiset x;
-        int con=0;
-        for(int i=0;i<n;i++){
-            
+        for(int i=0;i<=n;i++){
+            dju[i]=i;
+            tam[i]=1;
         }
         while(m--){
-            scanf("%d",&a);
-            auto p=x.lower_bound({a,-1e9});
-            printf("%d ",x.order_of_key(make_pair(p->first,p->second)));
-            x.erase(p);
-            x.insert({con,a});
-            con--;
+            scanf("%d%d",&a,&b);
+            unite(a,b);
         }
-        printf("\n");
+        printf("%d\n",res);
     }
 }
