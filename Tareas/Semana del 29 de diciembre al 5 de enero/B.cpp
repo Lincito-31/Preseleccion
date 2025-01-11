@@ -1,39 +1,44 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-int precalc[1000000],mini=1e9;
-ll n;
-int main(){
+int k,dp[50][100005];
+bool visited[50][100005];
+//Es posible formar un numero cuyo modk==modulo y suma de digitos de ese numero sea rest?
+int possible(int rest,int modulo){
+    if(dp[rest][modulo]!=0){
+        return dp[rest][modulo];
+    }
+    if(visited[rest][modulo]){
+        return dp[rest][modulo]=2;
+    }
+    visited[rest][modulo]=true;
     for(int i=0;i<10;i++){
-        precalc[i]=i;
+        if(rest-i<0){
+            break;
+        }
+        if(possible(rest-i,(modulo*10+i)%k)==1){
+            return dp[rest][modulo]=1;
+        }
     }
-    for(int i=10;i<100;i++){
-        precalc[i]=i/10+precalc[i%10];
+    return dp[rest][modulo]=2;
+}
+int main(){
+    scanf("%d",&k);
+    int cop=k,sum=0;
+    while(cop>0){
+        sum+=cop%10;
+        cop/=10;
     }
-    for(int i=100;i<1000;i++){
-        precalc[i]=i/100+precalc[i%100];
+    for(int i=0;i<=sum;i++){
+        for(int j=0;j<=k;j++){
+            dp[i][j]=0;
+            visited[i][j]=false;
+        }
     }
-    for(int i=1000;i<10000;i++){
-        precalc[i]=i/1000+precalc[i%1000];
+    dp[0][0]=1;
+    for(int i=1;i<=sum;i++){
+        if(possible(i,0)==1){
+            printf("%d",i);
+            return 0;
+        }
     }
-    for(int i=10000;i<100000;i++){
-        precalc[i]=i/10000+precalc[i%10000];
-    }
-    for(int i=100000;i<1000000;i++){
-        precalc[i]=i/100000+precalc[i%100000];
-    }
-    scanf("%lld",&n);
-    while(!(n&(1<<0))){
-        n=n>>1;
-    }
-    while(n%5==0){
-        n/=5;
-    }
-    for(int i=1;i<1e8;i+=2){
-        ll now=i*n;
-        int l=now%10;
-        now/=10;
-        mini=min(mini,precalc[now/1000000]+precalc[now%1000000]+l);
-    }
-    printf("%d",mini);
 }
