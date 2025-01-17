@@ -23,8 +23,12 @@ int main(){
                 psum[i][j]+=psum[i-1][j];
             }
         }
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
+        ll resul=1e9;
+        for(int i=1;i<=n && resul>0;i++){
+            for(int j=1;j<=m && resul>0;j++){
+                if(mat[i][j]==0){
+                    continue;
+                }
                 ll l=0,r=max(n,m);
                 while(l<r){
                     ll mid=(l+r)>>1;
@@ -33,18 +37,44 @@ int main(){
                     ll x3=i+mid,y3=j-mid-1;
                     ll x4=i+mid,y4=j+mid;
                     x1=max(x1,0ll);
-                    if(y1<0){
-                        y1=0;
+                    y1=max(y1,0ll);
+                    x2=max(x2,0ll);
+                    y2=min(y2,m);
+                    x3=min(x3,n);
+                    y3=max(y3,0ll);
+                    x4=min(x4,n);
+                    y4=min(y4,m);
+                    ll suma=psum[x4][y4]-psum[x2][y2]-psum[x3][y3]+psum[x1][y1];
+                    if(suma>k){
+                        r=mid;
+                    }else{
+                        l=mid+1;
                     }
-                    if(x2<0){
-                        x2=0;
-                    }
-                    if(y2>m){
-                        y2=m;
-                    }
-
+                }
+                ll mid=(l+r)>>1;
+                ll x1=i-mid-1,y1=j-mid-1;
+                ll x2=i-mid-1,y2=j+mid;
+                ll x3=i+mid,y3=j-mid-1;
+                ll x4=i+mid,y4=j+mid;
+                x1=max(x1,0ll);
+                y1=max(y1,0ll);
+                x2=max(x2,0ll);
+                y2=min(y2,m);
+                x3=min(x3,n);
+                y3=max(y3,0ll);
+                x4=min(x4,n);
+                y4=min(y4,m);
+                ll suma=psum[x4][y4]-psum[x2][y2]-psum[x3][y3]+psum[x1][y1];
+                if(suma>k){
+                    resul=min(resul,l);
+                    //cout << i << " " << j << " " << resul << "\n";
                 }
             }
+        }
+        if(resul==1e9){
+            printf("-1\n");
+        }else{
+            printf("%lld\n",resul);
         }
     }
 }
