@@ -4,19 +4,17 @@ typedef long long ll;
 ll n,a,b;
 vector<vector<ll>> graph;
 ll degree[300000];
-bool solve(ll now,ll ante,ll cantitrab,ll cadadia){
-    if(degree[now]-1>cantitrab){
-        return false;
+int solve(ll now,ll cantitrab,ll cadadia,ll dia){
+    while(degree[now]-1>cantitrab){
+        cadadia++;
+        cantitrab+=dia;
     }
     for(auto u:graph[now]){
-        if(u==ante){
-            continue;
-        }
         if(!solve(u,now,cantitrab-(degree[now]-1)+cadadia,cadadia)){
             return false;
         }
     }
-    return true;
+    
 }
 int main(){
     scanf("%lld",&n);
@@ -30,13 +28,6 @@ int main(){
         graph[b].push_back(a);
     }
     degree[0]++;
-    while(l<r){
-        ll mid=(l+r)>>1;
-        if(solve(0,-1,mid,mid)){
-            r=mid;
-        }else{
-            l=mid+1;
-        }
-    }
+    ll l=solve(0,0,0,1);
     printf("%lld",l);
 }
