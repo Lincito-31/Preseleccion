@@ -14,7 +14,6 @@ int solve(ll now,ll cantitrab,ll cadadia,ll dia){
             return false;
         }
     }
-    
 }
 int main(){
     scanf("%lld",&n);
