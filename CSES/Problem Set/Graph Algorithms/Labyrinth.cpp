@@ -1,15 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
-int Ax,Ay,n,m,Bx,By;
+int Ax,Ay,By,Bx,n,m;
 char mat[1000][1000];
+bool visited[1000][1000];
 pair<int,int> pad[1000][1000];
 int main(){
-    ios_base::sync_with_stdio(false);
-    cout.tie(NULL);cin.tie(NULL);
-    cin >> n >> m;
+    scanf("%d%d",&n,&m);
     for(int i=0;i<n;i++){
         for(int j=0;j<m;j++){
-            cin >> mat[i][j];
+            scanf(" %c",&mat[i][j]);
             if(mat[i][j]=='A'){
                 Ax=i;
                 Ay=j;
@@ -18,78 +17,80 @@ int main(){
                 Bx=i;
                 By=j;
             }
+            visited[i][j]=false;
             pad[i][j]={-1,-1};
         }
     }
     queue<pair<int,int>> cola;
     cola.push({Ax,Ay});
+    visited[Ax][Ay]=true;
     while(!cola.empty()){
-        pair<int,int> a=cola.front();cola.pop();
-        int x=a.first,y=a.second;
-        if(x>=n || x<0 || y>=m || y<0){
-            continue;
-        }
-        if(mat[x][y]=='#'){
-            continue;
-        }
-        if(mat[x][y]=='B'){
-            break;
-        }
-        mat[x][y]='#';
-        if(x<n-1){
-            if(mat[x+1][y]!='#'){
-                if(pad[x+1][y].first==-1){
-                    pad[x+1][y]={x,y};
-                    cola.push({x+1,y});
+        pair<int,int> top=cola.front();
+        cola.pop();
+        if(top.first>0){
+            if(!(visited[top.first-1][top.second]||(mat[top.first-1][top.second]=='#'))){
+                visited[top.first-1][top.second]=true;
+                pad[top.first-1][top.second]=top;
+                cola.push({top.first-1,top.second});
+                if(mat[top.first-1][top.second]=='B'){
+                    break;
                 }
             }
         }
-        if(x>0){
-            if(mat[x-1][y]!='#'){
-                if(pad[x-1][y].first==-1){
-                    pad[x-1][y]={x,y};
-                    cola.push({x-1,y});
+        if(top.second<m-1){
+            if(!(visited[top.first][top.second+1]||(mat[top.first][top.second+1]=='#'))){
+                visited[top.first][top.second+1]=true;
+                pad[top.first][top.second+1]=top;
+                cola.push({top.first,top.second+1});
+                if(mat[top.first][top.second+1]=='B'){
+                    break;
                 }
             }
         }
-        if(y<m-1){
-            if(mat[x][y+1]!='#'){
-                if(pad[x][y+1].first==-1){
-                    pad[x][y+1]={x,y};
-                    cola.push({x,y+1});
+        if(top.second>0){
+            if(!(visited[top.first][top.second-1]||(mat[top.first][top.second-1]=='#'))){
+                visited[top.first][top.second-1]=true;
+                pad[top.first][top.second-1]=top;
+                cola.push({top.first,top.second-1});
+                if(mat[top.first][top.second-1]=='B'){
+                    break;
                 }
             }
         }
-        if(y>0){
-            if(mat[x][y-1]!='#'){
-                if(pad[x][y-1].first==-1){
-                    pad[x][y-1]={x,y};
-                    cola.push({x,y-1});
+        if(top.first<n-1){
+            if(!(visited[top.first+1][top.second]||(mat[top.first+1][top.second]=='#'))){
+                visited[top.first+1][top.second]=true;
+                pad[top.first+1][top.second]=top;
+                cola.push({top.first+1,top.second});
+                if(mat[top.first+1][top.second]=='B'){
+                    break;
                 }
             }
         }
     }
-    if(pad[Bx][By].first==-1){
-        cout << "NO";
-    }else{
-        int x=Bx,y=By;
-        string st="";
-        while(!(x==Ax&&y==Ay)){
-            if(pad[x][y].first-x==1){
-                st.push_back('L');
-            }else if(pad[x][y].first-x==0){
-                if(pad[x][y].first-y==1){
-                    st.push_back('U');
-                }else{
-                    st.push_back('D');
-                }
+    if(visited[Bx][By]){
+        printf("YES\n");
+        vector<char> res;
+        while(!(By==Ay&&Bx==Ax)){
+            if(pad[Bx][By].first>Bx){
+                res.push_back('U');
+            }else if(pad[Bx][By].first<Bx){
+                res.push_back('D');
+            }else if(pad[Bx][By].second<By){
+                res.push_back('R');
             }else{
-                st.push_back('R');
+                res.push_back('L');
             }
-            int nuex=pad[x][y].first,nuey=pad[x][y].second;
-            x=nuex;y=nuey;
+            int tempx=pad[Bx][By].first;
+            int tempy=pad[Bx][By].second;
+            Bx=tempx;
+            By=tempy;
         }
-        //reverse(st.begin(),st.end());
-        cout << "YES\n" << st.size() << "\n" << st;
+        printf("%d\n",res.size());
+        for(int i=res.size()-1;i>=0;i--){
+            printf("%c",res[i]);
+        }
+    }else{
+        printf("NO\n");
     }
 }

@@ -1,31 +1,22 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
-int n,a,b,ini=0;
-ll sum=0,maxi=0;
+ll n,a,b,maxi=-1e18;
 int main(){
-    scanf("%d%d%d",&n,&a,&b);
-    vector<ll> nums(n);
-    for(int i=0;i<n;i++){
+    scanf("%lld%lld%lld",&n,&a,&b);
+    vector<ll> nums(n+1),psum(n+1);
+    multiset<ll> posi;
+    for(ll i=1;i<=n;i++){
         scanf("%lld",&nums[i]);
-    }
-    for(int i=0;i<a;i++){
-        sum+=nums[i];
-    }
-    maxi=sum;
-    for(int i=a;i<n;i++){
-        sum+=nums[i];
-        while(i-ini+1>b){
-            sum-=nums[ini];
-            ini++;
+        psum[i]=psum[i-1]+nums[i];
+        if(i-a>=0){
+            posi.insert(psum[i-a]);
         }
-        if(i-ini+1<=b){
-            maxi=max(sum,maxi);
+        if(i-b-1>=0){
+            posi.erase(posi.find(psum[i-b-1]));
         }
-        while(i-ini+1>a && nums[ini]<=0){
-            sum-=nums[ini];
-            maxi=max(sum,maxi);
-            ini++;
+        if(!posi.empty()){
+            maxi=max(maxi,psum[i]-*posi.begin());
         }
     }
     printf("%lld",maxi);

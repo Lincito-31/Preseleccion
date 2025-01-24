@@ -3,30 +3,36 @@ using namespace std;
 typedef long long ll;
 ll n,a,b;
 vector<vector<ll>> graph;
-ll degree[300000];
-int solve(ll now,ll cantitrab,ll cadadia,ll dia){
-    while(degree[now]-1>cantitrab){
-        cadadia++;
-        cantitrab+=dia;
+vector<ll> degree;
+vector<vector<ll>> dp;
+ll solve(ll now,ll cantiadja,ll dia,ll res,ll ante){
+    if(dia>=n){
+        return res;
     }
+    if(dp[now][dia]!=-1e9){
+        return dp[now][dia];
+    }
+    res=max(res,((cantiadja-1)/dia)+1);
     for(auto u:graph[now]){
-        if(!solve(u,now,cantitrab-(degree[now]-1)+cadadia,cadadia)){
-            return false;
+        if(u==ante){
+            res=max(solve(u,cantiadja,dia+1,res,now),res);
+        }else{
+            res=max(solve(u,cantiadja+degree[u]-1,dia+1,res,now),res);
         }
     }
+    return dp[now][dia]=res;
 }
 int main(){
     scanf("%lld",&n);
     graph.resize(n);
-    ll l=0,r=n;
-    while(--n){
+    dp.assign(n,vector<ll>(n,-1e9));
+    degree.assign(n,0);
+    for(int i=1;i<n;i++){
         scanf("%lld%lld",&a,&b);
         a--;b--;
         degree[a]++;degree[b]++;
         graph[a].push_back(b);
         graph[b].push_back(a);
     }
-    degree[0]++;
-    ll l=solve(0,0,0,1);
-    printf("%lld",l);
+    printf("%lld",solve(0,degree[0],1,0,-1));
 }
