@@ -1,3 +1,4 @@
+#include"holiday.h"
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -25,18 +26,10 @@ ll findMaxAttraction(int n,int start,int d,int attraction[]) {
     for(ll i=0;i<n;i++){
         ATRA[i]=attraction[i];
     }
-    dp.assign(d+5,vector<ll>(n+5,0));
-    return solve(d,start);
-}
-
-int main() {
-    int n, start, d;
-    int attraction[100000];
-    int i, n_s;
-    n_s = scanf("%d %d %d", &n, &start, &d);
-    for (i = 0 ; i < n; ++i) {
-	n_s = scanf("%d", &attraction[i]);
+    for(ll i=0;i<n;i++){
+        dp.clear();
+        dp.assign(d+5,vector<ll>(n+5,0));
+        maxi=max(maxi,solve(d-abs(start-i),i));
     }
-    printf("%lld\n", findMaxAttraction(n, start, d,  attraction));
-    return 0;
+    return maxi;
 }
