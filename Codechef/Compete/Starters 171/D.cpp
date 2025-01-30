@@ -28,12 +28,12 @@ int main(){
             }
         }
         //RGB,RBG,GRB,GBR,BGR,BRG;
-        int op1=modulo[0][1]+modulo[0][2]+modulo[1][0]+modulo[1][2]+modulo[2][0]+modulo[2][1];
-        int op2=modulo[0][1]+modulo[0][2]+modulo[1][0]+modulo[1][1]+modulo[2][0]+modulo[2][2];
-        int op3=modulo[0][0]+modulo[0][2]+modulo[1][1]+modulo[1][2]+modulo[2][0]+modulo[2][1];
-        int op4=modulo[0][0]+modulo[0][2]+modulo[1][1]+modulo[1][0]+modulo[2][2]+modulo[2][1];
-        int op5=modulo[0][0]+modulo[0][1]+modulo[1][0]+modulo[1][2]+modulo[2][2]+modulo[2][1];
-        int op6=modulo[0][0]+modulo[0][1]+modulo[1][1]+modulo[1][2]+modulo[2][2]+modulo[2][0];
+        int op1=n-modulo[0][0]-modulo[1][1]-modulo[2][2];
+        int op2=n-modulo[0][0]-modulo[1][2]-modulo[2][1];
+        int op3=n-modulo[0][1]-modulo[1][0]-modulo[2][2];
+        int op4=n-modulo[0][1]-modulo[1][2]-modulo[2][1];
+        int op5=n-modulo[0][2]-modulo[1][0]-modulo[2][1];
+        int op6=n-modulo[0][2]-modulo[1][1]-modulo[2][0];
         printf("%d\n",min(min(op1,op2),min(min(op3,op4),min(op5,op6))));
     }
 }
