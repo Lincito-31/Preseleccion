@@ -2,7 +2,7 @@
 #include <ext/pb_ds/assoc_container.hpp>
 #define ALL(x) x.begin(),x.end()
 #define REV(x) x.rbegin(),x.rend()
-#define MOD 1000000009
+#define MOD 1000000007
 using namespace std;
 using namespace __gnu_pbds;
 typedef long long ll;
@@ -62,20 +62,13 @@ int main(){
             // hay total bigmod(k,nue0) formas
             // hay (bigmod(k,nue0)-bigmod(k,(nue0+1)/2))/2 repetidos
             // quedan bigmod(k,tot0)-(bigmod(k,nue0)-bigmod(k,(nue0+1)/2))
-            ll direc=bigmod(k,tot0)-(bigmod(k,nue0)-bigmod(k,(nue0+1)/2))/2;
-            direc%=MOD;
-            cout << direc << endl;
-            /*ll first=bigmod(k,nue0)-bigmod(k,(nue0+1)/2);
+            ll first=bigmod(k,nue0)-bigmod(k,(nue0+1)/2)+MOD;
             first%=MOD;
             ll second=first*inversemod(2);
             second%=MOD;
-            second+=MOD;
-            second%=MOD;
-            ll res=bigmod(k,tot0)-second;
+            ll res=bigmod(k,tot0)-second+MOD;
             res%=MOD;
-            res+=MOD;
-            res%=MOD;
-            printf("%lld\n",res);*/
+            printf("%lld\n",res);
         }else{
             printf("%lld\n",bigmod(k,tot0));
         }
