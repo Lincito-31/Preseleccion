@@ -43,19 +43,17 @@ int main(){
     for(int i=0;i<nuen;i++){
         if(psum[nega[i].second]+fsum(nega[i].second)>=nega[i].first){
             cantidad++;
-            ll origi=nega[i].first;
-            auto p=positivo.lower_bound(nega[i].second);
-            p--;
-            while(pos[*p]<nega[i].first){
-                nega[i].first-=pos[*p];
-                positivo.erase(p);
-                p=positivo.lower_bound(nega[i].second);
+            //ll origi=nega[i].first;
+            while(nega[i].first>0){
+                auto p=positivo.lower_bound(nega[i].second);
                 p--;
-            }
-            pos[*p]-=nega[i].first;
-            update(*p,-origi);
-            if(pos[*p]==0){
-                positivo.erase(p);
+                ll mini=min(pos[*p],nega[i].first);
+                pos[*p]-=mini;
+                nega[i].first-=mini;
+                update(*p,-mini);
+                if(pos[*p]==0){
+                    positivo.erase(p);
+                }
             }
         }
     }
