@@ -2,48 +2,54 @@
 using namespace std;
 typedef long long ll;
 ll t,n;
-char A[2005],B[2005];
+string A,B;
 set<vector<pair<ll,ll>>> dif;
-string temp="";
+vector<pair<ll,ll>> temp={{-1,0}};
 void solve(ll x,ll y){
     if(x==n && y==n){
         //procesar
-        vector<pair<ll,ll>> res;
-        ll last=0;
-        for(ll i=0;i<2*n;i++){
-            if(temp[i]=='+'){
-                res.push_back({last,1});
-                last++;
-            }else if(temp[i]=='0'){
-                res.clear();
-                //last=0;
-            }else{
-                for(ll j=0;j<res.size();j++){
-                    res[j].second*=(ll)(temp[i]-48);
-                }
-            }
-        }
-        dif.insert(res);
-        return;
+        dif.insert(temp);
     }
     if(x<n){
-        temp.push_back(A[x]);
-        solve(x+1,y);
-        temp.pop_back();
+        if(A[x]=='+'){
+            temp.push_back({x,1});
+            solve(x+1,y);
+            temp.pop_back();
+        }else{
+            for(ll j=0;j<temp.size();j++){
+                temp[j].second*=(ll)(A[x]-48);
+            }
+            solve(x+1,y);
+            for(ll j=0;j<temp.size();j++){
+                temp[j].second/=(ll)(A[x]-48);
+            }
+        }
     }
     if(y<n){
-        temp.push_back(B[y]);
-        solve(x,y+1);
-        temp.pop_back();
+        if(B[y]=='+'){
+            temp.push_back({6+y,1});
+            solve(x,y+1);
+            temp.pop_back();
+        }else{
+            for(ll j=0;j<temp.size();j++){
+                temp[j].second*=(ll)(B[y]-48);
+            }
+            solve(x,y+1);
+            for(ll j=0;j<temp.size();j++){
+                temp[j].second/=(ll)(B[y]-48);
+            }
+        }
     }
 }
 int main(){
-    scanf("%d",&t);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);cout.tie(NULL);
+    cin >> t;
     while(t--){
         dif.clear();
-        scanf("%lld",&n);
-        scanf("%s %s",A,B);
+        cin >> n;
+        cin >> A >> B;
         solve(0,0);
-        printf("%lld\n",dif.size());
+        cout << dif.size() << "\n";
     }
 }
