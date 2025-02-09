@@ -1,45 +1,36 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#define RAND mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-#define MOD 1000000007
-#define ALL(x) x.begin(),x.end()
-#define REV(x) x.rbegin(),x.rend()
-#define FASTIO ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
-using namespace __gnu_pbds;
 using namespace std;
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<long long> vll;
-typedef pair<int,int> pii;
-typedef pair<long long,long long> pll;
-typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> intset;
-ll N,a;
+
+long long N,M;
 int main(){
-    FASTIO;
+    ios_base::sync_with_stdio(0);
+    cin.tie(NULL);cout.tie(NULL);
     cin >> N;
-    vector<vll> con(N,vll(1e5,0));
-    vll cantidad(N);
-    vector<vll> res(N,vll(N,0));
-    for(int i=0;i<N;i++){
+    vector<vector<long long>> dados(N);
+    vector<vector<long long>> contador(N,vector<long long>(1e5+1,0));
+    vector<vector<long long>> res(N,vector<long long>(N,0));
+    vector<long long> cantidad(N);
+    for(long long i=0;i<N;i++){
         cin >> cantidad[i];
-        for(int j=0;j<cantidad[i];j++){
-            cin >> a;
-            con[i][--a]++;
-            for(int k=0;k<i;k++){
-                res[i][k]+=con[k][a];
-            }
+        vector<long long> Ahora(cantidad[i]);
+        for(long long j=0;j<cantidad[i];j++){
+            cin >> Ahora[j];
+            contador[i][Ahora[j]]++;
         }
+        dados[i]=Ahora;
     }
     double maxi=0;
-    for(int i=0;i<N;i++){
-        for(int j=0;j<i;j++){
-            //cout << i << " " << j << " " << res[i][j] << endl;
-            ll nuede=res[i][j];
-            ll nuenum=cantidad[i]*cantidad[j];
-            ll mcd=__gcd(nuede,nuenum);
-            nuede/=mcd;
-            nuenum/=mcd;
-            maxi=max(maxi,(double)nuede/(double)nuenum);
+    for(long long i=0;i<N;i++){
+        for(long long j=0;j<i;j++){
+            for(long long k=0;k<cantidad[i];k++){
+                res[i][j]+=contador[j][dados[i][k]];
+            }
+            long long numerador=res[i][j];
+            long long denominador=cantidad[i]*cantidad[j];
+            long long mcd=__gcd(numerador,denominador);
+            numerador/=mcd;
+            denominador/=mcd;
+            maxi=max(maxi,(double)numerador/(double)(denominador));
         }
     }
     cout << fixed << setprecision(15) << maxi;
