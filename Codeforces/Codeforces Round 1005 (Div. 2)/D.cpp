@@ -38,7 +38,7 @@ int main(){
             int iz=0,de=n;
             cin >> a;
             int temp=a;
-            for(int i=30;i>=0;i--){
+            for(int i=30;i>=0 && iz!=de;i--){
                 auto p=lower_bound(bitense[i].begin(),bitense[i].end(),make_pair(iz,0));
                 if((p==bitense[i].end())){
                     if(temp&(1<<i)){
@@ -52,7 +52,7 @@ int main(){
                 if(temp>=p->second){
                     temp=a^(psum[p->first]);
                     iz=(p->first);
-                    de=min(de,int(next(p)-bitense[i].begin()));
+                    de=min(de,int(next(p)-bitense[i].begin())-1);
                 }else{
                     de=(p->first-1);
                 }

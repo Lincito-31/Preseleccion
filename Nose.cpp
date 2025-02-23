@@ -1,14 +1,34 @@
 #include <bits/stdc++.h>
+#define MOD 1000000007
 using namespace std;
-#include <bits/extc++.h>
-using namespace __gnu_pbds;
-typedef long long ll;
-typedef pair<ll,ll> pll;
-typedef tree<ll,null_type,less_equal<ll>,rb_tree_tag,tree_order_statistics_node_update> llset;
-
+int n,k,nums[100],dp[1000001];
 int main(){
-    llset a;
-    a.insert(7);
-    a.insert(4);
-    cout << a.order_of_key(0);
+    dp[0]=0;
+    scanf("%d%d",&n,&k);
+    for(int i=0;i<n;i++){
+        scanf("%d",&nums[i]);
+    }
+    for(int i=1;i<=k;i++){
+        dp[i]=1e9;
+    }
+    for(int i=1;i<=k;i++){
+        for(int j=0;j<n;j++){
+            if(i-nums[j]>=0){
+                dp[i]=min(dp[i],dp[i-nums[j]]+1);
+            }
+        }
+    }
+    int con=0;
+    for(int i=1;i<=k;i++){
+        int greedy=i/25;
+        int a=i;
+        a%=25;
+        greedy+=a/10;
+        a%=10;
+        greedy+=a;
+        if(greedy==dp[i]){
+            con++;
+        }
+    }
+    cout << con;
 }
