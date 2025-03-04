@@ -40,28 +40,6 @@ int main(){
             //cout << b[m-i+1] << " " << b[i-1] << endl;
         }
         ll sum=0,k=0;
-        vll res;
-        ll i=1,j=1;
-        while(true){
-            ll op1=0,op2=0;
-            if(n-j-2*(i+1)>=0 && m-(2*j)-(i+1)>=0){
-                op1=resa[i+1]+resb[j];
-            }
-            if(m-i-2*(j+1)>=0 && n-(2*i)-(j+1)>=0){
-                op2=resb[j+1]+resa[i];
-            }
-            if(op1==0 && op2==0){
-                break;
-            }
-            if(op1>=op2){
-                sum=op1;
-                i++;
-            }else{
-                sum=op2;
-                j++;
-            }
-            cout << sum << " "; 
-        }
-        cout << endl;
+        
     }
 }
