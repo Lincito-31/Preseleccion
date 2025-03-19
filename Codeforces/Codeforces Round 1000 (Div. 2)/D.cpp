@@ -27,19 +27,57 @@ int main(){
         sort(ALL(a));
         sort(ALL(b));
         for(int i=0;i<n;i++){
-            if(n-i-1<=i){
+            if(n-i-1<i){
                 break;
             }
             resa[i]=abs(a[n-i-1]-a[i]);
         }
         for(int i=0;i<m;i++){
-            if(m-i-1<=i){
+            if(m-i-1<i){
                 break;
             }
             resb[i]=abs(b[m-i-1]-b[i]);
-            //cout << b[m-i+1] << " " << b[i-1] << endl;
         }
-        ll sum=0,k=0;
-        
+        ll now=0;
+        vll resp(n);
+        ll i=0,j=0;
+        while(i<n && j<m){
+            ll op1=0,op2=0;
+            if(m-2*j-(i+1)>=0 && n-2*(i+1)-j>=0){
+                op1=resa[i];
+            }
+            if(n-2*i-(j+1)>=0 && m-2*(j+1)-i>=0){
+                op2=resb[j];
+            }
+            if(op1 || op2){
+                if(op1>=op2){
+                    now+=op1;
+                    i++;
+                }else{
+                    now+=op2;
+                    j++;
+                }
+                resp[i+j-1]=now;
+            }else{
+                break;
+            }
+        }
+        ll sobraab=m-2*j-i,sobraarr=n-2*i-j;
+        if(sobraab<=1 && sobraarr<=1){
+            printf("%lld\n",i+j);
+            for(int k=0;k<i+j;k++){
+                printf("%lld ",resp[k]);
+            }
+            printf("\n");
+        }else{
+            ll canti=i+j;
+            if(sobraab>=sobraarr){
+                while(sobraarr==0 && i>0 && ){
+                    
+                }
+            }else{
+                
+            }
+        }
     }
 }
