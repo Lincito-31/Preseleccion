@@ -72,12 +72,41 @@ int main(){
         }else{
             ll canti=i+j;
             if(sobraab>=sobraarr){
-                while(sobraarr==0 && i>0 && ){
-                    
+                while(sobraab>=sobraarr && i>0){
+                    sobraab++;
+                    sobraarr+=2;
+                    i--;
+                    now-=resa[i];
+                    while(n-2*i-(j+1)>=0 && m-2*(j+1)-i>=0){
+                        now+=resb[j];
+                        j++;
+                        canti=max(canti,i+j);
+                        if(resp[i+j-1]==0){
+                            resp[i+j-1]=now;
+                        }
+                    }
                 }
             }else{
-                
+                while(sobraarr>=sobraab && j>0){
+                    sobraarr++;
+                    sobraab+=2;
+                    j--;
+                    now-=resb[j];
+                    while(m-2*j-(i+1)>=0 && n-2*(i+1)-j>=0){
+                        now+=resa[i];
+                        i++;
+                        canti=max(canti,i+j);
+                        if(resp[i+j-1]==0){
+                            resp[i+j-1]=now;
+                        }
+                    }
+                }
             }
+            printf("%lld\n",canti);
+            for(int i=0;i<canti;i++){
+                printf("%lld ",resp[i]);
+            }
+            printf("\n");
         }
     }
 }
