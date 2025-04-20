@@ -5,14 +5,17 @@ int t,a,speed,timee;
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);cout.tie(0);
-    while(cin >> t && t!=-1){
-        int sum=0;
-        int last=0;
-        while(t--){
-            cin >> speed >> timee;
-            sum+=speed*(timee-last);
-            last=timee;
+    cin >> t;
+    cout << t << ":\n";
+    for(int i=2;(2*i-1)<=t;i++){
+        
+        int x=i,y=i-1;
+        if(t%(x+y)==0 || t%(x+y)==x){
+            cout << x << ',' << y << "\n";
         }
-        cout << sum << " miles\n";
+        y++;
+        if(t%(x+y)==0 || t%(x+y)==x){
+            cout << x << ',' << y << "\n";
+        }
     }
 }
