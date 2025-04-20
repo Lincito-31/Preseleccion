@@ -2,18 +2,21 @@
 #define ALL(x) x.begin(),x.end()
 using namespace std;
 typedef long long ll;
-int n,a;
+int n,sum=0,canti=0,arr[26];
+char letter;
+string VE;
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);cout.tie(0);
-    cin >> n;
-    int arr[n];
-    arr[0]=1;
-    for(int i=2;i<=n;i++){
-        cin >> a;
-        arr[a+1]=i;
+    while(cin >> n && n!=-1){
+        cin >> letter >> VE;
+        if(VE=="wrong"){
+            arr[letter-'A']+=20;
+        }else{
+            sum+=arr[letter-'A'];
+            sum+=n;
+            canti++;
+        }
     }
-    for(int i=0;i<n;i++){
-        cout << arr[i] << ' ';
-    }
+    cout << canti << ' ' << sum;
 }
