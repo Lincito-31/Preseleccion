@@ -1,21 +1,17 @@
 #include <bits/stdc++.h>
+#define ALL(x) x.begin(),x.end()
 using namespace std;
 typedef long long ll;
-string st;
+string A,B;
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);cout.tie(0);
-    while(cin >> st && st!="END"){
-        if(st=="1"){
-            cout << 1 << '\n';
-            continue;
-        }
-        int con=1;
-        int now=st.size();
-        while(now!=1){
-            now=1+log10(now);
-            con++;
-        }
-        cout << con+1 << '\n';
+    cin >> A >> B;
+    reverse(ALL(A));
+    reverse(ALL(B));
+    if(A>B){
+        cout << A;
+    }else{
+        cout << B;
     }
 }
