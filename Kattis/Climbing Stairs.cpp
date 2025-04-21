@@ -7,5 +7,11 @@ int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);cout.tie(0);
     cin >> a >> b >> c;
-    cout << a+b+c-min({a,b,c});
+    int now=c+abs(b-c);
+    if(now>=a){
+        now+=b;
+    }else{
+        now=a+b;
+    }
+    cout << now;
 }
