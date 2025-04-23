@@ -33,7 +33,8 @@
     "ostream": "cpp",
     "complex": "cpp",
     "any": "cpp",
-    "type_traits": "cpp"
+    "type_traits": "cpp",
+    "iomanip": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",
