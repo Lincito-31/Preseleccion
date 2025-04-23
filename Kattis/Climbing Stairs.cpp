@@ -11,7 +11,11 @@ int main(){
     if(now>=a){
         now+=b;
     }else{
-        now=a+b;
+        if((a-now)%2==0){
+            now=a+b;
+        }else{
+            now=a+b+1;
+        }
     }
     cout << now;
 }
