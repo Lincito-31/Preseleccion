@@ -7,9 +7,8 @@ string x,res;
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);cout.tie(0);
-    while(cin >> t){
-        res="";
-        maxi=0;
+    while(cin >> t && t){
+        maxi=-1;
         while(t--){
             con=0;
             cin >> x;
