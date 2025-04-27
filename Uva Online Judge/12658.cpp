@@ -4,15 +4,13 @@
 using namespace std;
 typedef long long ll;
 int t;
+string x[5];
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);cout.tie(0);
     cin >> t;
-    char x[5][4*t];
     for(int i=0;i<5;i++){
-        for(int j=0;j<4*t;j++){
-            cin >> x[i][j];
-        }
+        cin >> x[i];
     }
     for(int i=0;i<4*t;i+=4){
         if(x[0][i]=='.'){
@@ -25,4 +23,5 @@ int main(){
             }
         }
     }
+    cout << '\n';
 }
