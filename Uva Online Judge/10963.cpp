@@ -3,28 +3,31 @@
 #define REV(x) x.rbegin(),x.rend()
 using namespace std;
 typedef long long ll;
-int n,m,area;
-bool impar;
-char x[100][100];
+int t,w,dif,a,b;
+bool xd,lol;
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);cout.tie(0);
-    while(cin >> n >> m){
-        impar=false;
-        area=0;
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                cin >> x[i][j];
-                if(x[i][j]=='/' || x[i][j]=='\\'){
-                    impar=!impar;
-                    area++;
-                }else{
-                    if(impar){
-                        area+=2;
-                    }
-                }
+    cin >> t;
+    while(t--){
+        if(lol){
+            cout << "\n";
+        }
+        lol=true;
+        xd=true;
+        cin >> w;
+        cin >> a >> b;
+        dif=a-b;
+        while(--w){
+            cin >> a >> b;
+            if((a-b)!=dif){
+                xd=false;
             }
         }
-        cout << area/2 << '\n';
+        if(xd){
+            cout << "yes\n";
+        }else{
+            cout << "no\n";
+        }
     }
 }
