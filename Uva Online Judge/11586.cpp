@@ -22,8 +22,12 @@ int main(){
                 FF++;
             }
         }
-        if(MF%2==1){
-            
+        if(MF+MM+FF==1){
+            cout << "NO LOOP\n";
+        }else if(MM==FF){
+            cout << "LOOP\n";
+        }else{
+            cout << "NO LOOP\n";
         }
     }
 }
