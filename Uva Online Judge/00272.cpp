@@ -1,21 +1,21 @@
 #include <bits/stdc++.h>
 using namespace std;
-int t,a,con=1;
-string st,in;
+int con;
+string st;
 int main(){
-    while(cin >> t){
-        getline(cin,st);
-        if(t){
-            int can=0;
-            getline(cin,st);
-            stringstream in(st);
-            while(in>>a){
-                if(!a){
-                    can++;
+    while(getline(cin,st)){
+        for(int i=0;i<st.size();i++){
+            if(st[i]=='"'){
+                if(con){
+                    cout << "''";
+                }else{
+                    cout << "``";
                 }
+                con=1-con;
+            }else{
+                cout << st[i];
             }
-            cout << "Case " << con << ": " << t-2*can << "\n";
-            con++;
         }
+        cout << "\n";
     }
 }
