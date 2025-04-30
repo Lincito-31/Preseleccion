@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>a
+#include <bits/stdc++.h>
 using namespace std;
 int t,pointer,a[100];
 string s;
