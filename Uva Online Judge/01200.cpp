@@ -19,13 +19,14 @@ int main(){
                 a*=10;
                 a+=s[i]-48;
             }else if(s[i]=='x' && !lol){
+                if(a==-1e9){
+                    a=1;
+                }
                 if(nega){
                     nega=false;
                     a*=-1;
                 }
-                if(a!=-1e9){
-                    x+=a;
-                }
+                x+=a;
                 a=-1e9;
             }else if((s[i]=='+' || s[i]=='-') && !lol){
                 if(nega){
@@ -50,13 +51,14 @@ int main(){
                 }
                 a=-1e9;
             }else if(s[i]=='x'){
+                if(a==-1e9){
+                    a=1;
+                }
                 if(nega){
                     nega=false;
                     a*=-1;
                 }
-                if(a!=-1e9){
-                    x-=a;
-                }
+                x-=a;
                 a=-1e9;
             }else{
                 if(nega){
@@ -72,12 +74,21 @@ int main(){
                 }
             }
         }
+        //cout << x << ' ' << d << '\n';
         if(x==0 && d==0){
             cout << "IDENTITY\n";
         }else if(x==0){
             cout << "IMPOSSIBLE" << '\n';
         }else{
-            cout << d/x << '\n';
+            if(d/x<0){
+                if((double)d/x<(int)d/x){
+                    cout << d/x-1 << '\n';
+                }else{
+                    cout << d/x << '\n';
+                }
+            }else{
+                cout << d/x << '\n';
+            }
         }
     }
 }
