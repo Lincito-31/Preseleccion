@@ -18,48 +18,49 @@ int main(){
     cin >> t;
     while(t--){
         cin >> n >> q;
-        vector<pair<int,int>> bitense[32];
-        vector<int> nums(n),psum(n+1);
+        vector<int> nums(n),psum(n+2);
+        vector<vector<int>> last(n+2,vector<int>(32,1e9));
         for(int i=0;i<n;i++){
             cin >> nums[i];
         }
         nums.push_back(0);
         reverse(ALL(nums));
-        //nums.push_back((1<<30)-1);
-        for(int i=1;i<=n;i++){
+        nums.push_back(1<<30);
+        for(int i=1;i<=n+1;i++){
             psum[i]=psum[i-1]^nums[i];
+        }
+        for(int i=30;i>=0;i--){
+            if(nums[n+1]&(1<<i)){
+                last[n+1][i]=n+1;
+            }
+            last[n+1][i]=min(last[n+1][i],last[n+1][i+1]);
+        }
+        for(int i=n;i>=0;i--){
             for(int j=30;j>=0;j--){
+                last[i][j]=min(last[i+1][j],last[i][j+1]);
                 if(nums[i]&(1<<j)){
-                    bitense[j].push_back({i,nums[i]});
+                    last[i][j]=i;
                 }
             }
         }
         while(q--){
-            int iz=0,de=n;
             cin >> a;
-            int temp=a;
-            for(int i=30;i>=0 && iz!=de;i--){
-                auto p=lower_bound(bitense[i].begin(),bitense[i].end(),make_pair(iz,0));
-                if((p==bitense[i].end())){
-                    if(temp&(1<<i)){
-                        iz=de;
-                    }
-                    continue;
-                }
-                if(((p->first)>de)){
-                    continue;
-                }
-                if(temp>=p->second){
-                    temp=a^(psum[p->first]);
-                    iz=(p->first);
-                    de=min(de,int(next(p)-bitense[i].begin())-1);
+            int ori=a;
+            int iz=1;
+            while(true){
+                int x=last[iz][31-__builtin_clz(a)];
+                int temp=ori^psum[x-1];
+                if(temp>=nums[x]){
+                    temp^=nums[x];
+                    iz=x+1;
+                    a=temp;
                 }else{
-                    de=(p->first-1);
+                    iz=x;
+                    break;
                 }
-                //cout << i << " " << a << " " << p->first << "\n";
             }
-            cout << iz << " ";
+            cout << iz-1 << ' ';
         }
-        cout << "\n";
+        cout << '\n';
     }
 }
