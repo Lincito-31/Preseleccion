@@ -8,7 +8,7 @@ vector<vector<pair<int,int>>> grafo;
 vector<int> dist1,dist2,aske;
 vector<pair<int,int>> padre1,padre2;
 vector<int> vv,uu;
-int n,m;
+int n,m,global;
 ll res,a,b;
 void dfs(int now,int ante){
   for(auto u:grafo[now]){
@@ -28,13 +28,54 @@ int bs2(int xx,int ante){
   padre2[xx]={xx,-1};
   dfs(xx,ante);
   int con=0,con1=0;
-  vector<int> aske111(aske),second;
+  vector<int> aske111(aske),second(aske),nue,cop;
   for(int i=0;i<n;i++){
     if(dist2[i]>0){
       aske111[padre2[i].second]=0;
+      nue.push_back(dist2[i]);
+    }
+    if(dist2[i]==0){
+      nue.push_back(dist2[i]);
     }
   }
-  ll ressss=(res-ask(aske111))/(b-a);
+  if(nue.empty()){
+    return xx;
+  }
+  sort(ALL(nue));
+  cop.push_back(nue[0]);
+  for(int i=1;i<nue.size();i++){
+    if(nue[i]!=cop.back()){
+      cop.push_back(nue[i]);
+    }
+  }
+  nue=cop;
+  ll noo=res;
+  int iz=0,de=nue.size()-1;
+  while(iz<de){
+    int mid=(iz+de+1)>>1;
+    for(int i=0;i<n;i++){
+      if(dist2[i]==nue[mid]){
+        second[padre2[i].second]=0;
+      }
+    }
+    if(ask(second)==noo){
+      for(int i=0;i<n;i++){
+        if(dist2[i]==nue[mid]){
+          second[padre2[i].second]=1;
+        }
+      }
+      de=mid-1;
+    }else{
+      for(int i=0;i<n;i++){
+        if(dist2[i]==nue[mid]){
+          second[padre2[i].second]=1;
+        }
+      }
+      iz=mid;
+    }
+  }
+  ll ressss=nue[iz];
+  ll resnow=res-ressss*(b-a);
   if(ressss==0){
     return xx;
   }
@@ -44,8 +85,7 @@ int bs2(int xx,int ante){
       posibilidades.push_back(i);
     }
   }
-  ll resnow=res;
-  int iz=0,de=posibilidades.size()-1;
+  iz=0,de=posibilidades.size()-1;
   while(iz<de){
     int mid=(iz+de)>>1;
     for(int i=iz;i<=mid;i++){
@@ -60,11 +100,7 @@ int bs2(int xx,int ante){
       iz=mid+1;
     }
   }
-  if(padre2[vv[posibilidades[iz]]].first==uu[posibilidades[iz]]){
-    return vv[posibilidades[iz]];
-  }else{
-    return uu[posibilidades[iz]];
-  }
+  return posibilidades[iz];
 }
 void find_pair(int N,vector<int> U,vector<int> V, int A, int B){
   a=A;b=B;n=N;
@@ -101,6 +137,7 @@ void find_pair(int N,vector<int> U,vector<int> V, int A, int B){
     }
   }
   int x=U[iz],y=V[iz];
+  global=iz;
   aske.assign(m,1);
   aske[iz]=0;
   res/=a;
