@@ -31,22 +31,10 @@ void findLocation(int N, int first, int location[], int stype[])
     for(int i=2;i<N;i++){
         int x=ask(izq,dist[i].second),y=ask(der,dist[i].second);
         //op1 esta directo con izq
-        auto p=izquierda.lower_bound(location[izq]+x);
-        p--;
-        if(location[der]-*p+location[izq]+x-*p==y){
-            stype[dist[i].second]=2;
-            location[dist[i].second]=location[izq]+x;
-            derecha.insert(location[dist[i].second]);
-            if(location[dist[i].second]>location[der]){
-                der=dist[i].second;
-            }
+        if(location[izq]+x<location[y]){
+            
         }else{
-            stype[dist[i].second]=1;
-            location[dist[i].second]=location[der]-y;
-            izquierda.insert(location[dist[i].second]);
-            if(location[dist[i].second]<location[izq]){
-                izq=dist[i].second;
-            }
+
         }
     }
     return;

@@ -2,70 +2,53 @@
 #include <bits/stdc++.h>
 using namespace std;
 vector<pair<int,int>> st;
-// max,min
-void update(int node,int l,int r,int i,int j,int val,int type){
-  if(r<i || j<l){
+vector<int> valores;
+void propagate(int node,int l,int r){
+  if(l==r){
+    valores[l]=max(valores[l],st[node].first);
+    valores[l]=min(valores[l],st[node].second);
+    st[node]={0,1e9};
+    return;
+  }
+  int hiji=2*node+1,hijd=2*node+2;
+  st[hiji].first=max(st[hiji].first,st[node].first);
+  st[hiji].second=max(st[hiji].first,st[hiji].second);
+  st[hiji].second=min(st[hiji].second,st[node].second);
+  st[hiji].first=min(st[hiji].first,st[hiji].second);
+  st[hijd].first=max(st[hijd].first,st[node].first);
+  st[hijd].second=max(st[hijd].second,st[hijd].first);
+  st[hijd].second=min(st[hijd].second,st[node].second);
+  st[hijd].first=min(st[hijd].first,st[hijd].second);
+  st[node]={0,1e9};
+}
+void update(int node,int l,int r,int i,int j,int val,int tipo){
+  propagate(node,l,r);
+  if(l>j || r<i){
     return;
   }
   if(i<=l && r<=j){
-    if(type==1){
-      if(val>st[node].first){
-        st[node].first=val;
-        if(st[node].second<val){
-          st[node].second=val;
-        }
-      }
+    if(tipo==1){
+      st[node].first=val;
     }else{
-      if(val<st[node].second){
-        st[node].second=val;
-        if(st[node].first>val){
-          st[node].first=val;
-        }
-      }
+      st[node].second=val;
     }
     return;
   }
-  int mid=(l+r)>>1,hiji=2*node+1,hijd=2*node+2;
-  if(st[node].first!=-1){
-    update(hiji,l,mid,l,l,st[node].first,1);
-    update(hijd,mid+1,r,r,r,st[node].first,1);
-  }
-  if(st[node].second!=-1){
-    update(hiji,l,mid,l,l,st[node].second,2);
-    update(hijd,mid+1,r,r,r,st[node].second,2);
-  }
-  st[node]={-1,-1};
-  update(hiji,l,mid,i,j,val,type);
-  update(hijd,mid+1,r,i,j,val,type);
-}
-int query(int node,int l,int r,int pos){
-  if(l==r){
-    return max({st[node].first,st[node].second,0});
-  }
-  int mid=(l+r)>>1,hiji=2*node+1,hijd=2*node+2;
-  if(st[node].first!=-1){
-    update(hiji,l,mid,l,l,st[node].first,1);
-    update(hijd,mid+1,r,r,r,st[node].first,1);
-  }
-  if(st[node].second!=-1){
-    update(hiji,l,mid,l,l,st[node].second,2);
-    update(hijd,mid+1,r,r,r,st[node].second,2);
-  }
-  st[node]={-1,-1};
-  if(pos<=mid){
-    return query(hiji,l,mid,pos);
-  }else{
-    return query(hijd,mid+1,r,pos);
-  }
+  int mid=(l+r)>>1;
+  update(2*node+1,l,mid,i,j,val,tipo);
+  update(2*node+2,mid+1,r,i,j,val,tipo);
 }
 void buildWall(int n, int k, int op[], int left[], int right[], int height[], int finalHeight[]){
-  st.assign(4*n,{-1,-1});
+  st.assign(4*n,{0,1e9});
+  valores.resize(n);
   for(int i=0;i<k;i++){
     update(0,0,n-1,left[i],right[i],height[i],op[i]);
   }
   for(int i=0;i<n;i++){
-    finalHeight[i]=query(0,0,n-1,i);
+    update(0,0,n-1,i,i,0,1);
+  }
+  for(int i=0;i<n;i++){
+    finalHeight[i]=valores[i];
   }
   return;
 }
-
