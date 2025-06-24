@@ -6,54 +6,49 @@ typedef long long ll;
 typedef vector<int> vi;
 typedef vector<long long> vll;
 int N,Q;
-vector<vi> artifact;
+ll siosi;
+vector<pair<int,int>> Eindice,segt,artifact;
 vll res;
+void propagate(){
+
+}
+void update(int node,int l,int r,int i,int j,pair<int,int> rango){
+  propagate();
+  if(j<l || r<i){
+    return;
+  }
+  if(i<=l && r<=j){
+    if(rango.first==segt[node].second+1){
+      segt[node].second=rango.second;
+    }else{
+      //ciertas cosas;
+      segt[node]=rango;
+    }
+    return;
+  }
+  int hiji=2*node+1,hijd=2*node+2,mid=(l+r)>>1;
+  update(hiji,l,mid,i,j,rango);
+  update(hijd,mid+1,r,i,j,rango);
+  //
+}
 vll calculate_costs(vi W,vi A,vi B,vi E) {
   Q=E.size();
   N=W.size();
   res.resize(Q);
+  Eindice.resize(Q);
   artifact.resize(N);
   for(int i=0;i<N;i++){
-    artifact[i]={W[i],A[i],B[i]};
+    artifact[i]={W[i],A[i]-B[i]};
+    siosi+=B[i];
   }
-  sort(ALL(artifact));
   for(int i=0;i<Q;i++){
-    int iz=0;
-    res[i]+=artifact[0][2];
-    for(int j=1;j<N;j++){
-      res[i]+=artifact[j][2];
-      if(artifact[j][0]-artifact[j-1][0]>E[i]){
-        //iz al j-1;
-        if((j-iz)%2){
-          int mini=1e9;
-          for(int k=iz;k<=j-1;k++){
-            if((k-iz)%2){
-              if(artifact[k+1][0]-artifact[k-1][0]<=E[i]){
-                mini=min(mini,artifact[k][1]-artifact[k][2]);
-              }
-            }else{
-              mini=min(mini,artifact[k][1]-artifact[k][2]);
-            }
-          }
-          res[i]+=mini;
-        }
-        iz=j;
-      }
-    }
-    int j=N;
-    if((j-iz)%2){
-      int mini=1e9;
-      for(int k=iz;k<=j-1;k++){
-        if((k-iz)%2){
-          if(artifact[k+1][0]-artifact[k-1][0]<=E[i]){
-            mini=min(mini,artifact[k][1]-artifact[k][2]);
-          }
-        }else{
-          mini=min(mini,artifact[k][1]-artifact[k][2]);
-        }
-      }
-      res[i]+=mini;
-    }
+    Eindice[i]={E[i],i};
+  }
+  sort(ALL(Eindice));
+  sort(ALL(artifact));
+  segt.assign(4*Q+5,{0,0});
+  for(int i=1;i<N;i++){
+
   }
   return res;
 }
