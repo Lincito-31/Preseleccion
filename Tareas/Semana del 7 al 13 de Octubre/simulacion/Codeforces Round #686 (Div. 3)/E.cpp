@@ -1,53 +1,106 @@
 #include <bits/stdc++.h>
-#define ALL(x) x.begin(),x.end()
-#define REV(x) x.rbegin(),x.rend()
 using namespace std;
-typedef vector<int> vi;
-typedef pair<int,int> pii;
 typedef long long ll;
-typedef vector<ll> vll;
-ll t,n;
+vector<vector<ll>> gra;
+vector<ll> ciclo;
+vector<ll> tam;
+vector<bool> visitado;
+ll t,n,a,b,node,con;
+bool xd;
+void reset(){
+    gra.assign(n,{});
+    ciclo.clear();
+    node=0;
+    visitado.assign(n,false);
+    xd=false;
+    tam.assign(n,0);
+}
+void dfs(ll ahora, ll ante){
+    if(visitado[ahora]){
+        node=ahora;
+        return;
+    }
+    visitado[ahora]=true;
+    for(auto u: gra[ahora]){
+        if(u==ante){
+            continue;
+        }
+        dfs(u,ahora);
+    }
+}
+void dfs2(ll ahora, ll ante){
+    if(visitado[ahora]){
+        xd=true;
+        return;
+    }
+    ciclo.push_back(ahora);
+    visitado[ahora]=true;
+    for(auto u: gra[ahora]){
+        if(xd){
+            return;
+        }
+        if(u==ante){
+            continue;
+        }
+        dfs2(u,ahora);
+        if(xd){
+            return;
+        }
+    }
+    if(xd){
+        return;
+    }
+    ciclo.pop_back();
+}
+void dfs3(ll ahora,ll ante){
+    con++;
+    for(auto u: gra[ahora]){
+        if(u==ante || visitado[u]){
+            continue;
+        }
+        dfs3(u,ahora);
+    }
+}
 int main(){
     scanf("%lld",&t);
     while(t--){
         scanf("%lld",&n);
-        vll div;
-        for(ll i=2;i*i<=n;i++){
-            if(n%i==0){
-                n/=i;
-                div.push_back(i);
-                i--;
-            }
+        reset();
+        ll res=n*(n-1)/2;
+        for(int i=0;i<n;i++){
+            scanf("%lld %lld",&a,&b);
+            a--;b--;
+            gra[a].push_back(b);
+            gra[b].push_back(a);
         }
-        if(n>1){
-            div.push_back(n);
+        // paso 1: detectar ciclo
+        // encontrar un nodo del ciclo=node
+        dfs(0,-1);
+        // encontrar todos los nodos del ciclo=ciclo
+        visitado.assign(n,false);
+        dfs2(node,-1);
+        // paso 2: encontrar el tamaño de cada arbol del nodo del ciclo como raiz;
+        visitado.assign(n,false);
+        ll m=ciclo.size();
+        for(int i=0;i<m;i++){
+            visitado[ciclo[i]]=true;
         }
-        map<ll,ll> cant;
-        for(ll i=0;i<div.size();i++){
-            cant[div[i]]++;
+        for(int i=0;i<m;i++){
+            con=0;
+            dfs3(ciclo[i],-1);
+            tam[ciclo[i]]=con;
         }
-        vector<pair<ll,ll>> nums;
-        vll res;
-        for(auto u:cant){
-            nums.push_back({u.second,u.first});
+        // paso 3: crear un prefixsum
+        vector<ll> sum(m);
+        sum[1]=tam[ciclo[1]];
+        for(int i=2;i<m;i++){
+            sum[i]=sum[i-1]+tam[ciclo[i]];
         }
-        sort(REV(nums));
-        ll now=nums[0].second;
-        for(int i=0;i<nums.size()-1;i++){
-            while(nums[i].first>nums[i+1].first){
-                res.push_back(now);
-                nums[i].first--;
-            }
-            now*=nums[i+1].second;
+        // paso 4: usar combi y sumar
+        res+=tam[ciclo[0]]*sum[m-1];
+        for(int i=m-1;i>=2;i--){
+            res+=tam[ciclo[i]]*sum[i-1];
         }
-        while(nums.back().first>0){
-            res.push_back(now);
-            nums.back().first--;
-        }
-        printf("%d\n",res.size());
-        for(int i=0;i<res.size();i++){
-            printf("%lld ",res[i]);
-        }
-        printf("\n");
+        printf("%lld\n",res);
     }
 }

@@ -12,7 +12,6 @@ int main(){
         int x=min(cant[now],maxi[(now+1)%3]-cant[(now+1)%3]);
         cant[now]-=x;
         cant[(now+1)%3]+=x;
-        
     }
     for(int i=0;i<3;i++){
         out << cant[i] << '\n';
