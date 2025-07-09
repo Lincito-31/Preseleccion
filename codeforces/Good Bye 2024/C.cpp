@@ -13,48 +13,24 @@ typedef pair<int,int> pii;
 typedef pair<long long,long long> pll;
 typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> indexed_set;
 ll t=1,n,k;
-map<ll,map<ll,ll>> dp;
-map<ll,map<ll,ll>> dp_2;
-ll cant(ll leng){
-    if(leng<k){
-        return 0;
+pair<ll,ll> solve(ll n){
+    pair<ll,ll> res={0,0};
+    if(n<k){
+        return res;
     }
-    if(leng==1){
-        return 1;
+    if(n%2){
+        res.first+=(n+1)/2;
+        res.second++;
     }
-    if(dp_2[leng][k]!=0){
-        return dp_2[leng][k];
-    }
-    int m=(leng+1)/2,r=leng;
-    if((leng)%2==0){
-        dp_2[leng][k]+=cant(m)+cant(r-m);
-    }else{
-        dp_2[leng][k]+=1+cant(m-1)+cant(r-m);
-    }
-    return dp_2[leng][k];
-}
-ll calc(ll leng){
-    if(leng<k){
-        return 0;
-    }
-    if(leng==1){
-        return 1;
-    }
-    if(dp[leng][k]!=0){
-        return dp[leng][k];
-    }
-    int m=(leng+1)/2,r=leng;
-    if((leng)%2==0){
-        dp[leng][k]+=calc(m)+m*cant(r-m)+calc(r-m);
-    }else{
-        dp[leng][k]+=m+calc(m-1)+m*cant(r-m)+calc(r-m);
-    }
-    return dp[leng][k];
+    pair<ll,ll> x=solve(n/2);
+    res.first+=2*x.first+((n+1)/2)*x.second;
+    res.second+=2*x.second;
+    return res;
 }
 int main(){
     scanf("%lld",&t);
     while(t--){
         scanf("%lld%lld",&n,&k);
-        printf("%lld\n",calc(n));
+        printf("%lld\n",solve(n).first);
     }
 }
