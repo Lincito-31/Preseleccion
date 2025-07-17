@@ -1,65 +1,61 @@
 #include "insects.h"
 #include <bits/stdc++.h>
+#define ALL(x) x.begin(),x.end()
 using namespace std;
-bool visited[2000],es_indep[2000];
-vector<int> indep;
-vector<pair<int,int>> rango;
-int suma[2000],n,mini=1e9;
-void solve(int x,int y){
-  if(x==y){
-    return;
-  }
-  int mid=(x+y)>>1;
-  for(int i=mid+1;i<=y;i++){
-    move_outside(indep[i]);
-  }
-  for(int i=0;i<n;i++){
-    if(es_indep[i]){
-      continue;
-    }
-    if(rango[i]==make_pair(x,y)){
-      move_inside(i);
-      if(press_button()==1){
-        rango[i]={mid+1,y};
-      }else{
-        rango[i]={x,mid};
-      }
-      move_outside(i);
-    }
-  }
-  solve(x,mid);
-  for(int i=x;i<=mid;i++){
-    move_outside(indep[i]);
-  }
-  for(int i=mid+1;i<=y;i++){
-    move_inside(indep[i]);
-  }
-  solve(mid+1,y);
-}
+bool dentro_de_maquina[2000];
+int n,Indep,cant;
+vector<int> last,ante;
 int min_cardinality(int N){
+  mt19937 rng(chrono::steady_clock().now().time_since_epoch().count());
   n=N;
-  for(int i=0;i<N;i++){
+  move_inside(0);
+  dentro_de_maquina[0]=true;
+  Indep++;
+  cant++;
+  for(int i=1;i<N;i++){
     move_inside(i);
     if(press_button()==1){
-      indep.push_back(i);
-      es_indep[i]=true;
-      suma[indep.size()-1]++;
+      dentro_de_maquina[i]=true;
+      Indep++;
+      cant++;
     }else{
       move_outside(i);
+      ante.push_back(i);
     }
   }
-  rango.assign(N,{0,indep.size()-1});
-  solve(0,indep.size()-1);
-  for(int i=0;i<n;i++){
-    if(!es_indep[i]){
-      suma[rango[i].first]++;
+  shuffle(ALL(ante),rng);
+  int l=1,r=N/Indep;
+  while(l<r){
+    int mid=(l+r+1)>>1;
+    last.clear();
+    for(auto i:ante){
+      if(cant==mid*Indep){
+        break;
+      }
+      if(!dentro_de_maquina[i]){
+        move_inside(i);
+        if(press_button()<=mid){
+          dentro_de_maquina[i]=true;
+          cant++;
+          last.push_back(i);
+        }else{
+          move_outside(i);
+        }
+      }
+    }
+    if(cant==Indep*mid){
+      //ans>=mid;
+      l=mid;
+    }else{
+      //ans<mid
+      r=mid-1;
+      for(auto u:last){
+        move_outside(u);
+        dentro_de_maquina[u]=false;
+        cant--;
+      }
+      ante=last;
     }
   }
-  for(int i=0;i<2000;i++){
-    if(suma[i]==0){
-      break;
-    }
-    mini=min(mini,suma[i]);
-  }
-  return mini;
+  return l;
 }

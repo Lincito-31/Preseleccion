@@ -1,36 +1,29 @@
 #include <bits/stdc++.h>
 using namespace std;
-int n,m,k,x;
+int n,m,k,x,psum[1000001][26],dp[100001][26],dist[26][26],mini[100001];
 char st[100001];
 vector<pair<int,int>> graph[26];
-int dist[26][26];
 vector<bool> visited;
-int psum[26][1000001];
-int dp[100001];
 int main(){
     ios_base::sync_with_stdio(0);
     cin.tie(0);cout.tie(0);
-    ifstream in("cowmbat.in");
-    ofstream out("cowmbat.out");
-    in >> n >> m >> k;
+    ifstream fin("cowmbat.in");
+    ofstream fout("cowmbat.out");
+    fin >> n >> m >> k;
     for(int i=1;i<=n;i++){
-        in >> st[i];
-        for(int j=0;j<26;j++){
-            psum[j][i]+=psum[j][i-1];
-        }
-        psum[st[i]-'a'][i]++;
+        fin >> st[i];
     }
     for(int i=0;i<m;i++){
         for(int j=0;j<m;j++){
-            in >> x;
+            fin >> x;
             if(i==j){
                 continue;
             }
             graph[i].push_back({j,x});
         }
     }
-    for(int i=0;i<26;i++){
-        for(int j=0;j<26;j++){
+    for(int i=0;i<m;i++){
+        for(int j=0;j<m;j++){
             if(i==j){
                 dist[i][j]=0;
                 continue;
@@ -58,31 +51,26 @@ int main(){
             }
         }
     }
-    for(int i=0;i<=n;i++){
-        dp[i]=1e9;
-    }
-    dp[0]=0;
-    for(int i=k;i<=n;i++){
-        // del dp[i-2*k] al dp[i][k];
-        for(int j=k;j<2*k;j++){
-            //rango desde i-j+1 al i;
-            if(i-j<0){
-                break;
-            }
-            vector<int> cant(26);
-            for(int l=0;l<26;l++){
-                cant[l]=psum[l][i]-psum[l][i-j];
-            }
-            int mini=1e9,val;
-            for(int l=0;l<m;l++){
-                val=0;
-                for(int h=0;h<m;h++){
-                    val+=dist[h][l]*cant[h];
-                }
-                mini=min(mini,val);
-            }
-            dp[i]=min(dp[i],dp[i-j]+mini);
+    for(int i=1;i<=n;i++){
+        for(int j=0;j<m;j++){
+            psum[i][j]=psum[i-1][j]+dist[st[i]-'a'][j];
         }
     }
-    out << dp[n];
+    for(int i=0;i<=n;i++){
+        for(int j=0;j<26;j++){
+            dp[i][j]=1e9;
+        }
+        mini[i]=1e9;
+    }
+    mini[0]=0;
+    for(int i=1;i<=n;i++){
+        for(int j=0;j<m;j++){
+            dp[i][j]=min(dp[i][j],dp[i-1][j]+dist[st[i]-'a'][j]);
+            if(i>=k){
+                dp[i][j]=min(dp[i][j],mini[i-k]+psum[i][j]-psum[i-k][j]);
+            }
+            mini[i]=min(mini[i],dp[i][j]);
+        }
+    }
+    fout << mini[n];
 }

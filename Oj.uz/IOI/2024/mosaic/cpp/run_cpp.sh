@@ -1,9 +1,8 @@
 #!/bin/bash
 
-problem="mosaic"
-memory=2097152  # 2GB
-stack_size=2097152  # 2GB
-
-ulimit -v "${memory}"
-ulimit -s "${stack_size}"
-"./${problem}"
+g++ grader.cpp mosaic.cpp -o X.exe
+for x in {1..1};do
+    echo "file $x"
+    ./X.exe < input$x
+    echo "---"
+done
