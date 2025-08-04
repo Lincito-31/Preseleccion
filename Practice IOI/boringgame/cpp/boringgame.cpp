@@ -14,7 +14,7 @@ ll play_game() {
   }else{
     lastr=r=mid-1;
   }
-  con=sqrt(log2(r-l+1)+1);
+  con=11;
   while(lastl<lastr){
     for(int i=0;i<con && l<r;i++){
       mid=(l+r+1)>>1;
@@ -24,7 +24,7 @@ ll play_game() {
         r=mid-1;
       }
     }
-    con=sqrt(log2(lastr-lastl+1)+1);
+    con--;
     if(ask(ininum)==ini_st){
       //sigue siendo verdad;
       lastl=l;

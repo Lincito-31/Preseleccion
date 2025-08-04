@@ -1,33 +1,79 @@
 #include "aliens.h"
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
-using namespace std;
 typedef long long ll;
-vector<pair<int,int>> res;
-bool cmp(pair<int,int> x,pair<int,int> y){
+using namespace std;
+vector<pair<ll,ll>> puntos;
+ll dp[4005][4005],res=1e18,N;
+// minima cantidad de cuadrantes que tomo hasta la pos i con k fotos
+bool cmp(pair<ll,ll> x,pair<ll,ll> y){
     if(x.first==y.first){
         return x.second>y.second;
     }
-    return x<y;
+    return x.first<y.first;
 }
-pair<int,int> solve(int x){
-    
+ll cuadrado(ll x){
+    return x*x;
 }
-ll take_photos(int n,int m,int k,vector<int> r,vector<int> c){
-    vector<pair<int,int>> points(n);
-    for(int i=0;i<n;i++){
-        points[i]={min(r[i],c[i]),abs(r[i]-c[i])+1};
+pair<ll,ll> solve(ll constante){
+    pair<ll,ll> minidp[N+5];
+    // minidp[i]: first:la minimacantidad de cuadrantes hasta pos i,second=la cantidad de fotos;
+    //por cada nuevo foto quito constante
+    for(int i=0;i<N+5;i++){
+        minidp[i]={1e18,1e18};
     }
-    sort(ALL(points),cmp);
-    res.push_back(points[0]);
-    for(int i=1;i<n;i++){
-        if(points[i].second+points[i].first>res.back().first+res.back().second){
-            res.push_back(points[i]);
+    minidp[0]={0,0};
+    for(int i=1;i<=N;i++){
+        //unir con anteriores
+        for(int j=1;j<=i;j++){
+            ll cant_cua=cuadrado(puntos[i].second-puntos[j].first+1);
+            // verificar si une con lo anterior;
+            ll limiteiz=puntos[j].first;
+            ll limitede=puntos[j-1].second;
+            if(limiteiz<=limitede){
+                cant_cua-=cuadrado(limitede-limiteiz+1);
+            }
+            if(minidp[j-1].first+cant_cua+constante<minidp[i].first){
+                minidp[i].first=minidp[j-1].first+cant_cua+constante;
+                minidp[i].second=minidp[j-1].second+1;
+            }else if(minidp[j-1].first+cant_cua+constante==minidp[i].first){
+                minidp[i].second=max(minidp[i].second,minidp[j-1].second+1);
+            }
         }
     }
-    sort(ALL(res));
-    ll iz=0,de=1e9;
-    while(iz<de){
-        solve((iz+de)>>1);
+    return minidp[N];
+}
+ll take_photos(int n,int m,int k,vector<int> r,vector<int> c){
+    puntos.resize(n);
+    for(ll i=0;i<n;i++){
+        if(r[i]>c[i]){
+            swap(r[i],c[i]);
+        }
+        puntos[i]={r[i],c[i]};
     }
+    sort(ALL(puntos),cmp);
+    vector<pair<ll,ll>> temp;
+    temp.push_back({-2e9,-2e9});
+    temp.push_back(puntos[0]);
+    for(ll i=1;i<n;i++){
+        if(puntos[i].second<=temp.back().second){
+            continue;
+        }
+        temp.push_back(puntos[i]);
+    }
+    puntos=temp;
+    n=puntos.size()-1;
+    N=n;
+    ll iz=0,de=1e18;
+    while(iz<de){
+        ll mid=(iz+de)>>1;
+        // mientras mas grande sea mid, k sera mas pequeño
+        if(solve(mid).second<=k){
+            de=mid;
+        }else{
+            iz=mid+1;
+        }
+    }
+    pair<ll,ll> sol=solve(iz);
+    return sol.first-k*iz;
 }
